@@ -1,0 +1,23 @@
+//
+//  Button.swift
+//  SwiftlyUI
+//
+//  Created by erikbdev on 8/14/25.
+//
+
+public struct Button<Label: View>: View {
+  public let action: () -> Void
+  public var label: Label
+
+  public var body: Never { fatalError() }
+
+  public init(action: @escaping () -> Void, @ViewBuilder label: @escaping () -> Label) {
+    self.action = action
+    self.label = label()
+  }
+
+  public init(_ text: String, action: @escaping () -> Void) where Label == Text {
+    self.action = action
+    self.label = Text(text)
+  }
+}

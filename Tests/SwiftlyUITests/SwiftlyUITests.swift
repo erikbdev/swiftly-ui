@@ -6,21 +6,34 @@
 //
 
 import Testing
-@testable import SwiftlyUICore
+
+@testable import SwiftlyUI
 
 @Suite("SwiftlyUITests")
 struct SwiftlyUITests {
-    struct TestApp: App {
-        var body: some Scene {
-            WindowGroup {
-                Text("Hello, World!")
-                Text("This is a test.")
-            }
-        }
+  struct TestApp: App {
+    var body: some Scene {
+      WindowGroup {
+        ContentView()
+      }
     }
-    
-    @Test func layoutNodes() async throws {
-//        let app = TestApp()
-//        let evaluateNodes = app.createBackend()
+  }
+
+  struct ContentView: View {
+    @State private var count = 0
+    var body: some View {
+      Text("Hello, World")
     }
+  }
+
+  @Test func layoutNodes() async throws {
+    let graph = ViewGraph(ContentView())
+
+    #expect(
+      graph.logTree() == """
+        ContentView
+          Text
+        """
+    )
+  }
 }

@@ -4,25 +4,19 @@
 import PackageDescription
 
 let package = Package(
-    name: "SwiftlyUI",
-    platforms: [.macOS(.v14)],
-    products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
-        .library(
-            name: "SwiftlyUI",
-            targets: ["SwiftlyUI"]
-        ),
-    ],
-    targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
-        .target(name: "SwiftlyUICore"),
-        .target(
-            name: "SwiftlyUI",
-            dependencies: [
-                "SwiftlyUICore"
-            ]
-        ),
-        .testTarget(name: "SwiftlyUITests", dependencies: ["SwiftlyUI"])
-    ]
+  name: "SwiftlyUI",
+  platforms: [.macOS(.v14)],
+  products: [
+    .library(
+      name: "SwiftlyUI",
+      targets: ["SwiftlyUI"]
+    )
+  ],
+  targets: [
+    .target(
+      name: "SwiftlyUI",
+      dependencies: []
+    ),
+    .testTarget(name: "SwiftlyUITests", dependencies: ["SwiftlyUI"]),
+  ]
 )

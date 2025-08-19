@@ -11,6 +11,10 @@ public struct _GraphValue<Value> {
   // }
 }
 
+public struct _GraphInputs {
+  var environment: EnvironmentValues
+}
+
 public struct _ViewInputs {
   // var properties: [String: String] = [:]
   // var modifiers: [any ModifiedContent] = []

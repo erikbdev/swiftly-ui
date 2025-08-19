@@ -15,13 +15,13 @@ public protocol View {
   //    @preconcurrency
   var body: Self.Body { get }
 
-  nonisolated static func _makeView(_ view: _GraphValue<Self>, inputs: _ViewInputs) -> _ViewOutputs
+  // nonisolated static func _makeView(_ view: _GraphValue<Self>, inputs: _ViewInputs) -> _ViewOutputs
 }
 
 extension View {
-  public nonisolated static func _makeView(_ view: _GraphValue<Self>, inputs: _ViewInputs) -> _ViewOutputs {
-    _ViewOutputs()
-  }
+  // public nonisolated static func _makeView(_ view: _GraphValue<Self>, inputs: _ViewInputs) -> _ViewOutputs {
+  // _ViewOutputs()
+  // }
 }
 
 extension Never: View {

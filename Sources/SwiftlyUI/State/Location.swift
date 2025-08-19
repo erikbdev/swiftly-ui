@@ -20,20 +20,20 @@ final class AnyLocation<Value>: _Location {
   }
 }
 
-// extension AnyLocation: Sendable where Value: Sendable {}
-
 struct ConstantLocation<Value>: _Location {
   let value: Value
   func get() -> Value { value }
   func set(_ value: Value, transaction: Transaction) {}
 }
 
-struct MappedLocation<Value>: _Location {
+struct FunctionLocation<Value>: _Location {
   let getValue: () -> Value
   let setValue: (Value, Transaction) -> Void
+
   func get() -> Value {
     self.getValue()
   }
+
   func set(_ value: Value, transaction: Transaction) {
     self.setValue(value, transaction)
   }

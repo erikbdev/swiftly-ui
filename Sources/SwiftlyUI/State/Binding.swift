@@ -10,64 +10,26 @@
 public struct Binding<Value> {
   public var transaction = Transaction()
   var _location: AnyLocation<Value>
-  // var _value: Value
-  // private var _tracker: (() -> Void)?
+  var _value: Value
 
   public var wrappedValue: Value {
-    get { fatalError() }
-    nonmutating set {}
+    get { _location.get() }
+    nonmutating set {
+      _location.set(newValue, transaction: transaction)
+    }
   }
 
-  public var projectedValue: Self { fatalError() }
-
-  public init(projectedValue: Self) {
-    fatalError()
-  }
-
-  @preconcurrency
-  public init(
-    get: @escaping @isolated(any) () -> Value,
-    set: @escaping @isolated(any) (Value) -> Void
-  ) {
-    let location = MappedLocation(getValue: get) { value, _ in set(value) }
-    self._location = AnyLocation(location)
-  }
-
-  @preconcurrency
-  public init(
-    get: @escaping @isolated(any) () -> Value,
-    set: @escaping @isolated(any) (Value, Transaction) -> Void
-  ) {
-    fatalError()
-  }
-
-  /// Creates a binding by projecting the base value to an optional value.
-  ///
-  /// - Parameter base: A value to project to an optional value.
-  public init<V>(_ base: Binding<V>) where Value == V? {
-    fatalError()
-  }
-
-  /// Creates a binding by projecting the base value to an unwrapped value.
-  ///
-  /// - Parameter base: A value to project to an unwrapped value.
-  ///
-  /// - Returns: A new binding or `nil` when `base` is `nil`.
-  public init?(_ base: Binding<Value?>) {
-    fatalError()
-  }
-
-  /// Creates a binding by projecting the base value to a hashable value.
-  ///
-  /// - Parameters:
-  ///   - base: A `Hashable` value to project to an `AnyHashable` value.
-  public init<V>(_ base: Binding<V>) where Value == AnyHashable, V: Hashable {
-    fatalError()
-  }
+  public var projectedValue: Self { self }
 
   public subscript<Subject>(dynamicMember keyPath: WritableKeyPath<Value, Subject>) -> Binding<Subject> {
-    get { fatalError() }
-    nonmutating set { fatalError() }
+    let location = _location
+    return Binding<Subject> {
+      location.get()[keyPath: keyPath]
+    } set: { newValue, transaction in
+      var enclosingValue = location.get()
+      enclosingValue[keyPath: keyPath] = newValue
+      location.set(enclosingValue, transaction: transaction)
+    }
   }
 
   /// Specifies a transaction for the binding.
@@ -76,9 +38,9 @@ public struct Binding<Value> {
   ///
   /// - Returns: A new binding.
   public func transaction(_ transaction: Transaction) -> Self {
-    var copy = self
-    copy.transaction = transaction
-    return copy
+    var base = self
+    base.transaction = transaction
+    return base
   }
 
   /// Specifies an animation to perform when the binding value changes.
@@ -88,16 +50,124 @@ public struct Binding<Value> {
   ///
   /// - Returns: A new binding.
   public func animation(_ animation: Animation? = .default) -> Self {
-    var copy = self
-    copy.transaction.animation = animation
-    return copy
+    var base = self
+    base.transaction.animation = animation
+    return base
   }
 }
 
 extension Binding {
+  public init(projectedValue base: Self) {
+    self = base
+  }
+
+  public init(
+    get: @escaping () -> Value,
+    set: @escaping (Value) -> Void
+  ) {
+    self.init(get: get) { value, _ in set(value) }
+  }
+
+  public init(
+    get: @escaping () -> Value,
+    set: @escaping (Value, Transaction) -> Void
+  ) {
+    self.init(value: get(), location: AnyLocation(FunctionLocation(getValue: get, setValue: set)))
+  }
+
+  init(value: Value, location: AnyLocation<Value>) {
+    self._location = location
+    self._value = value
+  }
+
+  public init<V>(_ base: Binding<V>) where Value == V? {
+    let location = base._location
+
+    self.init {
+      location.get()
+    } set: { newValue, transaction in
+      guard let newValue else { return }
+      location.set(newValue, transaction: transaction)
+    }
+  }
+
+  public init?(_ base: Binding<Value?>) {
+    guard let value = base.wrappedValue else {
+      return nil
+    }
+
+    let location = base._location
+
+    self.init {
+      location.get() ?? value
+    } set: {
+      location.set($0, transaction: $1)
+    }
+  }
+
+  public init<V>(_ base: Binding<V>) where Value == AnyHashable, V: Hashable {
+    let location = base._location
+    self.init {
+      AnyHashable(location.get())
+    } set: {
+      location.set($0.base as! V, transaction: $1)
+    }
+  }
+
   public static func constant(_ value: Value) -> Self {
-    fatalError()
+    Binding(value: value, location: AnyLocation(ConstantLocation(value: value)))
   }
 }
 
 extension Binding: @unchecked Sendable where Value: Sendable {}
+
+extension Binding: Identifiable where Value: Identifiable {
+  public var id: Value.ID { wrappedValue.id }
+
+  public typealias ID = Value.ID
+}
+
+extension Binding: Sequence where Value: MutableCollection {
+  public typealias Element = Binding<Value.Element>
+  public typealias Iterator = IndexingIterator<Binding<Value>>
+  public typealias SubSequence = Slice<Binding<Value>>
+}
+
+extension Binding: Collection where Value: MutableCollection {
+  public typealias Index = Value.Index
+  public typealias Indices = Value.Indices
+
+  public var startIndex: Index { wrappedValue.startIndex }
+
+  public var endIndex: Index { wrappedValue.endIndex }
+
+  public var indices: Indices { wrappedValue.indices }
+
+  public func index(after i: Index) -> Index {
+    wrappedValue.index(after: i)
+  }
+
+  public func formIndex(after i: inout Index) {
+    wrappedValue.formIndex(after: &i)
+  }
+
+  public subscript(position: Index) -> Element {
+    Binding<Value>.Element {
+      wrappedValue[position]
+    } set: {
+      wrappedValue[position] = $0
+    }
+  }
+}
+
+extension Binding: BidirectionalCollection where Value: BidirectionalCollection, Value: MutableCollection {
+  public func index(before index: Binding<Value>.Index) -> Binding<Value>.Index {
+    wrappedValue.index(before: index)
+  }
+
+  public func formIndex(before index: inout Binding<Value>.Index) {
+    wrappedValue.formIndex(before: &index)
+  }
+}
+
+extension Binding: RandomAccessCollection where Value: MutableCollection, Value: RandomAccessCollection {}

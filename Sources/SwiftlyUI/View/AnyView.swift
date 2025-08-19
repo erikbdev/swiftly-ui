@@ -17,4 +17,8 @@ public struct AnyView: View {
       self.content = view
     }
   }
+
+  public init<T: View>(erasing view: T) {
+    self.init(view)
+  }
 }

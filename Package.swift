@@ -12,10 +12,15 @@ let package = Package(
       targets: ["SwiftlyUI"]
     )
   ],
+  dependencies: [
+    .package(url: "https://github.com/apple/swift-log", exact: "1.6.4")
+  ],
   targets: [
     .target(
       name: "SwiftlyUI",
-      dependencies: []
+      dependencies: [
+        .product(name: "Logging", package: "swift-log")
+      ]
     ),
     .testTarget(name: "SwiftlyUITests", dependencies: ["SwiftlyUI"]),
   ]

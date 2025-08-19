@@ -13,7 +13,6 @@ public enum ViewBuilder {
 
   @available(*, unavailable, message: "this expression does not conform to 'View'")
   @_disfavoredOverload
-  @_alwaysEmitIntoClient
   public static func buildExpression(_ invalid: Any) -> some View { fatalError() }
 
   public static func buildBlock() -> EmptyView {

@@ -11,5 +11,5 @@ public struct _ConditionalContent<TrueContent: View, FalseContent: View>: View {
 
 @_spi(Internals)
 extension _ConditionalContent: PrimitiveView {
-  public nonisolated static func _makeView(_ node: Node<Self>) {}
+  public static func _makePrimitiveView(_ node: Node<Self>) {}
 }

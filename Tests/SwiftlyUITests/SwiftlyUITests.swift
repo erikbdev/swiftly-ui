@@ -5,9 +5,8 @@
 //  Created by Erik Bautista Santibanez on 8/14/25.
 //
 
-import Testing
-
 @_spi(Internals) import SwiftlyUI
+import Testing
 
 @Suite("SwiftlyUITests")
 struct SwiftlyUITests {
@@ -30,9 +29,13 @@ struct SwiftlyUITests {
   }
 
   struct WindowTest: Scene {
-    var body: some Scene { 
+    var body: some Scene {
       Window {
+        if true {
+          Color.red
+        }
         Text("Hello")
+          .foregroundStyle(.red, .green)
         Button("Bye") {}
       }
     }

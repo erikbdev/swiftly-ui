@@ -19,36 +19,20 @@ public struct _ViewModifier_Content<Modifier: ViewModifier>: View {
   public var body: Never { fatalError() }
 }
 
-public struct ModifiedContent<Content, Modifier> {
-  public typealias Body = Never
-
-  public var content: Content
-  public var modifier: Modifier
-
-  public nonisolated init(content: Content, modifier: Modifier) {
-    self.content = content
-    self.modifier = modifier
-  }
-}
-
-extension ModifiedContent: Equatable where Content: Equatable, Modifier: Equatable {}
-
-extension ModifiedContent: View where Content: View, Modifier: ViewModifier, Modifier.Body == Never {
-  public var body: Never { fatalError() }
-
-  // TODO: Add this modifier's properties as part of the view that is attached to.
-}
-
-public struct EmptyModifier: ViewModifier {
-  public typealias Body = Never
-
-  public func body(content: Content) -> Never { fatalError() }
+@_spi(Internals)
+extension _ViewModifier_Content: PrimitiveView {
+  public static func _makePrimitiveView(_ node: Node<Self>) {}
 }
 
 extension Never: ViewModifier {
   public typealias Body = Never
 
   public func body(content: Content) -> Never { fatalError() }
+}
+
+@_spi(Internals)
+public protocol PrimitiveViewModifier: ViewModifier where Body == Never {
+  static func _makeView(_ node: Node<Self>)
 }
 
 extension View {

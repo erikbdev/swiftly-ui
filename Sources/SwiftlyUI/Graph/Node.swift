@@ -31,6 +31,11 @@ public final class Node<V>: AnyNode {
   public var children: [any AnyNode] = []
   public var root: (any AnyNode)? { parent?.root ?? self }
 
+  func insertChild<N: AnyNode>(_ node: N) {
+    node.parent = self
+    self.children.append(node)
+  }
+
   public func logTree(level: Int = 0) -> String {
     let indent = Array(repeating: " ", count: level * 2)
       .joined()

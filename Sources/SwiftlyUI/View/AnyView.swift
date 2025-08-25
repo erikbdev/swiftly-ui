@@ -25,5 +25,5 @@ public struct AnyView: View {
 
 @_spi(Internals)
 extension AnyView: PrimitiveView {
-  public nonisolated static func _makeView(_ node: Node<AnyView>) {}
+  public nonisolated static func _makePrimitiveView(_ node: Node<AnyView>) {}
 }

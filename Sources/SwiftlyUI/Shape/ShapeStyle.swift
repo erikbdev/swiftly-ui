@@ -21,6 +21,11 @@ extension ShapeStyle where Resolved == Never {
   }
 }
 
+@_spi(Internals)
+public protocol PrimitiveShapeStyle: ShapeStyle where Resolved == Never {
+  static func _makeShapeStyle(_ node: Node<Self>)
+}
+
 public struct AnyShapeStyle: ShapeStyle {
   let base: any ShapeStyle
 

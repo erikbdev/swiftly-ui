@@ -7,13 +7,6 @@
 
 public protocol DynamicProperty {
   mutating func update()
-
-  // static func _makeProperty<Value>(
-  // in buffer: inout _DynamicPropertyBuffer,
-  // container: _GraphValue<Value>,
-  // fieldOffset: Int,
-  // inputs: inout _GraphInputs
-  // )
 }
 
 extension DynamicProperty {

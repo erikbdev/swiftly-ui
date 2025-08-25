@@ -31,3 +31,8 @@ public struct ForEach<Data: RandomAccessCollection, ID: Hashable, Content> {
 }
 
 extension ForEach: View where Content: View {}
+
+@_spi(Internals)
+extension ForEach: PrimitiveView where Content: View {
+  public nonisolated static func _makeView(_ node: Node<Self>) {}
+}

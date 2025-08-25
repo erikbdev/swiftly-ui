@@ -20,3 +20,14 @@ public struct _ForegroundStyleModifier<Style: ShapeStyle>: ViewModifier {
 
   public func body(content: Content) -> Never { fatalError() }
 }
+
+extension ModifierValues where Root: View {
+  public var foregroundStyle: _ForegroundStyleModifierKey<Root>.Value? {
+    get { self[_ForegroundStyleModifierKey<Root>.self] }
+    set { self[_ForegroundStyleModifierKey<Root>.self] = newValue }
+  }
+}
+
+public struct _ForegroundStyleModifierKey<Root: View>: ModifierKey {
+  public typealias Value = AnyShapeStyle
+}

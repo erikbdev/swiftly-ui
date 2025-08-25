@@ -21,3 +21,8 @@ public struct Button<Label: View>: View {
     self.label = Text(text)
   }
 }
+
+@_spi(Internals)
+extension Button: PrimitiveView {
+  public nonisolated static func _makeView(_ node: Node<Self>) {}
+}

@@ -18,3 +18,8 @@ public struct ZStack<Content: View>: View {
     self.alignment = alignment
   }
 }
+
+@_spi(Internals)
+extension ZStack: PrimitiveView {
+  public nonisolated static func _makeView(_ node: Node<Self>) {}
+}

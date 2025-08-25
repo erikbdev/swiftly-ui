@@ -6,10 +6,12 @@
 //
 
 public struct HStack<Content: View>: View {
-  public var body: Content
+  public var content: Content
 
   private var spacing: Int?
   private var alignment: VerticalAlignment
+
+  public var body: Never { fatalError() }
 
   public init(
     alignment: VerticalAlignment = .center,
@@ -17,7 +19,12 @@ public struct HStack<Content: View>: View {
     @ViewBuilder content: () -> Content
   ) {
     self.alignment = alignment
-    self.body = content()
+    self.content = content()
     self.spacing = spacing
   }
+}
+
+@_spi(Internals)
+extension HStack: PrimitiveView {
+  public nonisolated static func _makeView(_ node: Node<Self>) {}
 }

@@ -45,3 +45,8 @@ public struct EdgeInsets: Hashable {
     self.trailing = trailing
   }
 }
+
+@_spi(Internals)
+extension GeometryReader: PrimitiveView {
+  public nonisolated static func _makeView(_ node: Node<Self>) {}
+}

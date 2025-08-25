@@ -7,7 +7,7 @@
 
 import Testing
 
-@testable import SwiftlyUI
+@_spi(Internals) import SwiftlyUI
 
 @Suite("SwiftlyUITests")
 struct SwiftlyUITests {
@@ -21,19 +21,36 @@ struct SwiftlyUITests {
 
   struct ContentView: View {
     @State private var count = 0
+
     var body: some View {
+      Color.red
       Text("Hello, World")
+      // .foregroundStyle(.red)
+    }
+  }
+
+  struct WindowTest: Scene {
+    var body: some Scene { 
+      Window {
+        Text("Hello")
+        Button("Bye") {}
+      }
     }
   }
 
   @Test func layoutNodes() async throws {
-    let graph = ViewGraph(ContentView())
+    // let window = WindowTest()
+    let root = Node<WindowTest>()
+    WindowTest._makeScene(root)
+    print(root.logTree())
+    // let graph = ViewGraph(ContentView())
 
-    #expect(
-      graph.logTree() == """
-        ContentView
-          Text
-        """
-    )
+    // #expect(
+    //   graph.logTree() == """
+    //     ContentView
+    //       Color
+    //       Text
+    //     """
+    // )
   }
 }

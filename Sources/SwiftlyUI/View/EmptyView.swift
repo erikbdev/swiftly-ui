@@ -10,3 +10,8 @@ public struct EmptyView: View {
 
   @inlinable public init() {}
 }
+
+@_spi(Internals)
+extension EmptyView: PrimitiveView {
+  public nonisolated static func _makeView(_ node: Node<Self>) {}
+}

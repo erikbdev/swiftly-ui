@@ -21,3 +21,8 @@ public struct VStack<Content: View>: View {
     self.spacing = spacing
   }
 }
+
+@_spi(Internals)
+extension VStack: PrimitiveView {
+  public nonisolated static func _makeView(_ node: Node<Self>) {}
+}

@@ -21,6 +21,11 @@ public struct Toggle<Label: View>: View {
   }
 }
 
+@_spi(Internals)
+extension Toggle: PrimitiveView {
+  public nonisolated static func _makeView(_ node: Node<Self>) {}
+}
+
 public struct ToggleStyle: Sendable {
   public static let `switch` = Self()
   public static let button = Self()

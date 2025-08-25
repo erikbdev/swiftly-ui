@@ -14,20 +14,39 @@ public protocol Scene {
   //    @MainActor
   //    @preconcurrency
   var body: Self.Body { get }
-
-  static func _makeScene(_ scene: _GraphValue<Self>)
-}
-
-extension Scene {
-  public static func _makeScene(_ scene: _GraphValue<Self>) {
-    // Body._makeScene(_GraphValue<Scene>)
-  }
 }
 
 extension Never: Scene {}
 
-extension Scene where Body == Never {
-  var body: Never {
-    fatalError("Scene bodies cannot be Never")
+@_spi(Internals)
+extension Scene {
+  @_disfavoredOverload
+  public nonisolated static func _makeScene(_ node: Node<Self>) {
+    if let prim = self as? any PrimitiveScene.Type {
+      func makeScene<T: PrimitiveScene>(_: T.Type) {
+        T._makeScene(unsafeDowncast(node, to: Node<T>.self))
+      }
+      makeScene(prim.self)
+    } else if Body.self is Never.Type {
+        fatalError("\(Self.self).body cannot have a value of type `Never`")
+    } else {
+      Body._makeScene(node[\.body])
+    }
   }
+}
+
+extension Scene where Body == Never {
+  public var body: Never { sceneBodyNever() }
+}
+
+@_spi(Internals)
+public protocol PrimitiveScene: Scene where Body == Never {
+  var body: Never { get }
+
+  nonisolated static func _makeScene(_ node: Node<Self>)
+}
+
+@_spi(Internals)
+public func sceneBodyNever() -> Never {
+  fatalError("Scene.body of type `\(Never.self)` is not accessible")
 }

@@ -10,3 +10,8 @@ public struct Divider: View {
 
   public var body: Never { fatalError() }
 }
+
+@_spi(Internals)
+extension Divider: PrimitiveView {
+  public nonisolated static func _makeView(_ node: Node<Self>) {}
+}

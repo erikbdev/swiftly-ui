@@ -14,16 +14,29 @@ public protocol View {
   //    @MainActor
   //    @preconcurrency
   var body: Self.Body { get }
-
-  // nonisolated static func _makeView(_ view: _GraphValue<Self>, inputs: _ViewInputs) -> _ViewOutputs
 }
 
+@_spi(Internals)
 extension View {
-  // public nonisolated static func _makeView(_ view: _GraphValue<Self>, inputs: _ViewInputs) -> _ViewOutputs {
-  // _ViewOutputs()
-  // }
+  public nonisolated static func _makeView(_ node: Node<Self>) {
+    if let prim = self as? any PrimitiveView.Type {
+      func makeView<T: PrimitiveView>(_: T.Type) {
+        T._makeView(unsafeDowncast(node, to: Node<T>.self))
+      }
+      makeView(prim.self)
+    } else if Body.self is Never.Type {
+        fatalError("\(Self.self).body cannot have a value of type `Never`")
+    } else {
+      Body._makeView(node[\.body])
+    }
+  }
 }
 
 extension Never: View {
   public nonisolated var body: Never { self }
+}
+
+@_spi(Internals)
+public protocol PrimitiveView: View where Body == Never {
+  nonisolated static func _makeView(_ node: Node<Self>)
 }

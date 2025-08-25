@@ -8,9 +8,16 @@
 public struct WindowGroup<Content: View>: Scene {
   let content: Content
 
-  public var body: Never { fatalError() }
+  public var body: Never { sceneBodyNever() }
 
   public init(@ViewBuilder content: () -> Content) {
     self.content = content()
+  }
+}
+
+@_spi(Internals)
+extension WindowGroup: PrimitiveScene {
+  public static func _makeScene(_ node: Node<Self>) {
+    Content._makeView(node[\.content])
   }
 }

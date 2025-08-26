@@ -16,7 +16,7 @@ public struct Group<Content: View>: View {
 
 @_spi(Internals)
 extension Group: PrimitiveView {
-  public nonisolated static func _makePrimitiveView(_ node: Node<Self>) {
+  public nonisolated static func _makePrimitiveView(_ node: GraphNode<Self>) {
     Content._makeView(node[\.content])
   }
 }

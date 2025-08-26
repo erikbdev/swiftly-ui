@@ -17,7 +17,7 @@ public struct WindowGroup<Content: View>: Scene {
 
 @_spi(Internals)
 extension WindowGroup: PrimitiveScene {
-  public static func _makePrimitiveScene(_ node: Node<Self>) {
+  public static func _makePrimitiveScene(_ node: GraphNode<Self>) {
     Content._makeView(node[\.content])
   }
 }

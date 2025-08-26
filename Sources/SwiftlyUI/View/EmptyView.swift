@@ -13,5 +13,5 @@ public struct EmptyView: View {
 
 @_spi(Internals)
 extension EmptyView: PrimitiveView {
-  public nonisolated static func _makePrimitiveView(_ node: Node<Self>) {}
+  public nonisolated static func _makePrimitiveView(_ node: GraphNode<Self>) {}
 }

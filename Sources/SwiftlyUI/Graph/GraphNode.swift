@@ -10,17 +10,17 @@ public protocol AnyNode: AnyObject {
 }
 
 @_spi(Internals)
-public final class Node<V>: AnyNode {
-  // var object: V
+public final class GraphNode<V>: AnyNode {
+  let object: V
 
-  // init(_ object: V) {
-  // self.object = object
-  // }
+  public init(_ object: V) {
+    self.object = object
+  }
 
-  public init() {}
+  // public init() {}
 
-  subscript<R>(child: KeyPath<V, R>) -> Node<R> {
-    let child = Node<R>()
+  subscript<R>(child: KeyPath<V, R>) -> GraphNode<R> {
+    let child = GraphNode<R>(object[keyPath: child])
     child.parent = self
     children.append(child)
     return child

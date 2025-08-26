@@ -27,9 +27,20 @@ extension ModifiedContent: View where Content: View, Modifier: ViewModifier, Mod
 
 @_spi(Internals)
 extension ModifiedContent: PrimitiveView where Content: View, Modifier: ViewModifier, Modifier.Body == Never {
-  public static func _makePrimitiveView(_ node: Node<Self>) {
+  public static func _makePrimitiveView(_ node: GraphNode<Self>) {
+    let child = node[\.content]
+    Content._makeView(child)
+    let childModifier = GraphNode(node.object.modifier)
+    child.insertChild(childModifier)
+    // Modifier._makeViewModifier(childModifier)
   }
 }
+
+// @_spi(Internals)
+// extension ModifiedContent: PrimitiveViewModifier where Modifier: ViewModifier {
+//     public static func _makePrimitiveViewModifier(_ node: GraphNode<Self>) {}
+// }
+
 
 public struct EmptyModifier: ViewModifier {
   public typealias Body = Never

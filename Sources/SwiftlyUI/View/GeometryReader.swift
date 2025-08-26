@@ -48,5 +48,5 @@ public struct EdgeInsets: Hashable {
 
 @_spi(Internals)
 extension GeometryReader: PrimitiveView {
-  public nonisolated static func _makePrimitiveView(_ node: Node<Self>) {}
+  public nonisolated static func _makePrimitiveView(_ node: GraphNode<Self>) {}
 }

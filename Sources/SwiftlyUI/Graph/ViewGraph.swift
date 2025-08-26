@@ -1,8 +1,8 @@
 public final class ViewGraph<Root: View> {
-  var root: Node<Root>
+  var root: GraphNode<Root>
 
   public init(_ root: Root) {
-    self.root = Node()
+    self.root = GraphNode(root)
   }
 
   func logTree() -> String {

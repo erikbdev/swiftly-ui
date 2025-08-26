@@ -31,7 +31,7 @@ struct SwiftlyUITests {
   struct WindowTest: Scene {
     var body: some Scene {
       Window {
-        if true {
+        if false {
           Color.red
         }
         Text("Hello")
@@ -42,11 +42,10 @@ struct SwiftlyUITests {
   }
 
   @Test func layoutNodes() async throws {
-    // let window = WindowTest()
-    let root = Node<WindowTest>()
+    let window = WindowTest()
+    let root = GraphNode(window)
     WindowTest._makeScene(root)
     print(root.logTree())
-    // let graph = ViewGraph(ContentView())
 
     // #expect(
     //   graph.logTree() == """

@@ -23,7 +23,7 @@ extension ShapeStyle where Resolved == Never {
 
 @_spi(Internals)
 public protocol PrimitiveShapeStyle: ShapeStyle where Resolved == Never {
-  static func _makeShapeStyle(_ node: Node<Self>)
+  static func _makeShapeStyle(_ node: GraphNode<Self>)
 }
 
 public struct AnyShapeStyle: ShapeStyle {

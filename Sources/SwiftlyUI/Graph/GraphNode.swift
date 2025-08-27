@@ -1,12 +1,21 @@
 import Foundation
 
-@_spi(Internals)
-public protocol AnyNode: AnyObject {
-  var parent: AnyNode? { get set }
-  var children: [AnyNode] { get set }
-  var root: AnyNode? { get }
+// @_spi(Internals)
+// public protocol AnyNode: AnyObject {
+//   var parent: AnyNode? { get set }
+//   var children: [AnyNode] { get set }
+//   var root: AnyNode? { get }
 
-  func logTree(level: Int) -> String
+//   func logTree(level: Int) -> String
+// }
+
+@_spi(Internals)
+open class AnyNode {
+  weak var parent: AnyNode?
+  var children: [AnyNode] = []
+  var root: AnyNode? { parent?.root ?? self }
+
+  func logTree(level: Int) -> String { "" }
 }
 
 @_spi(Internals)
@@ -17,8 +26,6 @@ public final class GraphNode<V>: AnyNode {
     self.object = object
   }
 
-  // public init() {}
-
   subscript<R>(child: KeyPath<V, R>) -> GraphNode<R> {
     let child = GraphNode<R>(object[keyPath: child])
     child.parent = self
@@ -26,17 +33,14 @@ public final class GraphNode<V>: AnyNode {
     return child
   }
 
-  public weak var parent: AnyNode?
-  var uuid = UUID()
-  public var children: [any AnyNode] = []
-  public var root: (any AnyNode)? { parent?.root ?? self }
+  let uuid = UUID()
 
-  func insertChild<N: AnyNode>(_ node: N) {
-    node.parent = self
-    self.children.append(node)
+  func insertChild<N: AnyNode>(_ child: N) {
+    child.parent = self
+    self.children.append(child)
   }
 
-  public func logTree(level: Int = 0) -> String {
+  public override func logTree(level: Int = 0) -> String {
     let indent = Array(repeating: " ", count: level * 2)
       .joined()
 
@@ -48,3 +52,10 @@ public final class GraphNode<V>: AnyNode {
     return string
   }
 }
+
+// public final class Weak<T: AnyObject> {
+//   weak var value : T?
+//   init (_ value: T) {
+//     self.value = value
+//   }
+// } 

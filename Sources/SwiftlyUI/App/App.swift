@@ -30,6 +30,5 @@ extension App {
 extension App {
   public static func main() {
     let app = Self()
-
   }
 }

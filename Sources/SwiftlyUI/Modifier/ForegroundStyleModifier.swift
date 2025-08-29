@@ -40,7 +40,7 @@ public struct _ForegroundStyleModifier<S: ShapeStyle, each Style: ShapeStyle>: V
 
 @_spi(Internals)
 extension _ForegroundStyleModifier: PrimitiveViewModifier {
-  public static func _makePrimitiveViewModifier(_ node: GraphNode<Self>) {
+  public static func _makePrimitiveViewModifier(_ node: Node<Self>) {
     //        repeat (each Style)._makeShapeStyle(<#T##Node<Self>#>)
   }
 }

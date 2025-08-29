@@ -23,17 +23,5 @@ extension ShapeStyle where Resolved == Never {
 
 @_spi(Internals)
 public protocol PrimitiveShapeStyle: ShapeStyle where Resolved == Never {
-  static func _makeShapeStyle(_ node: GraphNode<Self>)
-}
-
-public struct AnyShapeStyle: ShapeStyle {
-  let base: any ShapeStyle
-
-  public init(_ style: some ShapeStyle) {
-    if let style = style as? AnyShapeStyle {
-      self.base = style.base
-    } else {
-      self.base = style
-    }
-  }
+  static func _makeShapeStyle(_ node: Node<Self>)
 }

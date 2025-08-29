@@ -43,7 +43,7 @@ struct SwiftlyUITests {
 
   @Test func layoutNodes() async throws {
     let window = WindowTest()
-    let root = GraphNode(window)
+    let root = Node(window)
     WindowTest._makeScene(root)
     print(root.logTree())
 

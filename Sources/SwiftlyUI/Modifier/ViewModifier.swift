@@ -15,16 +15,16 @@ public protocol ViewModifier {
 
 @_spi(Internals)
 extension ViewModifier {
-  public nonisolated static func _makeViewModifier(_ node: GraphNode<Self>) {
+  public nonisolated static func _makeViewModifier(_ node: Node<Self>) {
     if let prim = self as? any PrimitiveViewModifier.Type {
       func make<T: PrimitiveViewModifier>(_: T.Type) {
-        T._makePrimitiveViewModifier(unsafeDowncast(node, to: GraphNode<T>.self))
+        T._makePrimitiveViewModifier(unsafeDowncast(node, to: Node<T>.self))
       }
       make(prim.self)
     } else if Body.self is Never.Type {
       fatalError("\(Self.self).body cannot have a value of type `Never`")
     } else {
-      let child = GraphNode(node.object.body(content: .init()))
+      let child = Node(node.object.body(content: .init()))
       node.insertChild(child)
       Body._makeView(child)
     }
@@ -39,7 +39,7 @@ public struct _ViewModifier_Content<Modifier: ViewModifier>: View {
 
 @_spi(Internals)
 extension _ViewModifier_Content: PrimitiveView {
-  public static func _makePrimitiveView(_ node: GraphNode<Self>) {}
+  public static func _makePrimitiveView(_ node: Node<Self>) {}
 }
 
 extension Never: ViewModifier {
@@ -50,7 +50,7 @@ extension Never: ViewModifier {
 
 @_spi(Internals)
 public protocol PrimitiveViewModifier: ViewModifier where Body == Never {
-  static func _makePrimitiveViewModifier(_ node: GraphNode<Self>)
+  static func _makePrimitiveViewModifier(_ node: Node<Self>)
 }
 
 extension View {

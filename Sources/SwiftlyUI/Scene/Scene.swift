@@ -21,10 +21,10 @@ extension Never: Scene {}
 @_spi(Internals)
 extension Scene {
   @_disfavoredOverload
-  public nonisolated static func _makeScene(_ node: GraphNode<Self>) {
+  public nonisolated static func _makeScene(_ node: Node<Self>) {
     if let prim = self as? any PrimitiveScene.Type {
       func makePrimitiveScene<T: PrimitiveScene>(_: T.Type) {
-        T._makePrimitiveScene(unsafeDowncast(node, to: GraphNode<T>.self))
+        T._makePrimitiveScene(unsafeDowncast(node, to: Node<T>.self))
       }
       makePrimitiveScene(prim.self)
     } else if Body.self is Never.Type {
@@ -43,7 +43,7 @@ extension Scene where Body == Never {
 public protocol PrimitiveScene: Scene where Body == Never {
   var body: Never { get }
 
-  nonisolated static func _makePrimitiveScene(_ node: GraphNode<Self>)
+  nonisolated static func _makePrimitiveScene(_ node: Node<Self>)
 }
 
 @_spi(Internals)

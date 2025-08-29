@@ -18,10 +18,10 @@ public protocol View {
 
 @_spi(Internals)
 extension View {
-  public nonisolated static func _makeView(_ node: GraphNode<Self>) {
+  public nonisolated static func _makeView(_ node: Node<Self>) {
     if let prim = self as? any PrimitiveView.Type {
       func makePrimitiveView<T: PrimitiveView>(_: T.Type) {
-        T._makePrimitiveView(unsafeDowncast(node, to: GraphNode<T>.self))
+        T._makePrimitiveView(unsafeDowncast(node, to: Node<T>.self))
       }
       makePrimitiveView(prim.self)
     } else if Body.self is Never.Type {
@@ -38,5 +38,5 @@ extension Never: View {
 
 @_spi(Internals)
 public protocol PrimitiveView: View where Body == Never {
-  nonisolated static func _makePrimitiveView(_ node: GraphNode<Self>)
+  nonisolated static func _makePrimitiveView(_ node: Node<Self>)
 }

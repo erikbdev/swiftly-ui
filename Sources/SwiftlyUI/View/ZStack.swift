@@ -21,7 +21,7 @@ public struct ZStack<Content: View>: View {
 
 @_spi(Internals)
 extension ZStack: PrimitiveView {
-  public nonisolated static func _makePrimitiveView(_ node: GraphNode<Self>) {
+  public nonisolated static func _makePrimitiveView(_ node: Node<Self>) {
     Content._makeView(node[\.content])
   }
 }

@@ -34,9 +34,9 @@ extension ForEach: View where Content: View {}
 
 @_spi(Internals)
 extension ForEach: PrimitiveView where Content: View {
-  public nonisolated static func _makePrimitiveView(_ node: GraphNode<Self>) {
+  public nonisolated static func _makePrimitiveView(_ node: Node<Self>) {
     for element in node.object.data {
-      let child = GraphNode(node.object.content(element))
+      let child = Node(node.object.content(element))
       node.insertChild(child)
       Content._makeView(child)
     }

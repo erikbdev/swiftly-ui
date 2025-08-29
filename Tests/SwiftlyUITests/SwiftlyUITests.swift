@@ -2,7 +2,7 @@
 //  SwiftlyUITests.swift
 //  SwiftlyUI
 //
-//  Created by Erik Bautista Santibanez on 8/14/25.
+//  Created by erikbdev on 8/14/25.
 //
 
 @_spi(Internals) import SwiftlyUI
@@ -25,34 +25,17 @@ struct SwiftlyUITests {
       Color.red
       Text("Hello, World")
       // .foregroundStyle(.red)
-    }
-  }
 
-  struct WindowTest: Scene {
-    var body: some Scene {
-      Window {
-        if false {
-          Color.red
-        }
-        Text("Hello")
-          .foregroundStyle(.red, .green)
-        Button("Bye") {}
+      if count > 0 {
+        Text("I have been clicked!")
       }
     }
   }
 
   @Test func layoutNodes() async throws {
-    let window = WindowTest()
-    let root = Node(window)
-    WindowTest._makeScene(root)
+    let content = ContentView()
+    let root = ViewNode(content)
+    ContentView._makeView(root)
     print(root.logTree())
-
-    // #expect(
-    //   graph.logTree() == """
-    //     ContentView
-    //       Color
-    //       Text
-    //     """
-    // )
   }
 }

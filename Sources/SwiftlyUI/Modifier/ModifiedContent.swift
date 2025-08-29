@@ -2,7 +2,7 @@
 //  ModifiedContent.swift
 //  SwiftlyUI
 //
-//  Created by Erik Bautista Santibanez on 8/25/25.
+//  Created by erikbdev on 8/25/25.
 //
 
 public struct ModifiedContent<Content, Modifier> {
@@ -23,17 +23,6 @@ extension ModifiedContent: View where Content: View, Modifier: ViewModifier, Mod
   public var body: Never { fatalError() }
 
   // TODO: Add this modifier's properties as part of the view that is attached to.
-}
-
-@_spi(Internals)
-extension ModifiedContent: PrimitiveView where Content: View, Modifier: ViewModifier, Modifier.Body == Never {
-  public static func _makePrimitiveView(_ node: Node<Self>) {
-    let child = node[\.content]
-    Content._makeView(child)
-    let childModifier = Node(node.object.modifier)
-    child.insertChild(childModifier)
-    // Modifier._makeViewModifier(childModifier)
-  }
 }
 
 // @_spi(Internals)

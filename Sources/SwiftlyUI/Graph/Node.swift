@@ -8,27 +8,25 @@ public class Node<V>: AnyNode {
     self.object = object
   }
 
-  subscript<R>(child: KeyPath<V, R>) -> Node<R> {
-    let child = Node<R>(object[keyPath: child])
-    child.parent = self
-    children.append(child)
-    return child
-  }
-
   func insertChild<N: AnyNode>(_ child: N) {
     child.parent = self
     self.children.append(child)
   }
 
   public override func logTree(level: Int = 0) -> String {
-    let indent = Array(repeating: " ", count: level * 2)
-      .joined()
-
-    var string = ""
-    string += "\(indent)→ \(V.self)"
-    for child in children {
-      string += "\n" + child.logTree(level: level + 1)
+    guard level == 0 else {
+      var string = ""
+      string += "\"\(V.self)\""
+      for child in children {
+        string += "\n\"\(V.self)\" -> \(child.logTree(level: level + 1))"
+      }
+      return string
     }
-    return string
+    var string = "digraph {"
+    string += "\n"
+    for child in children {
+      string += "\n\"\(V.self)\" -> \(child.logTree(level: level + 1))"
+    }
+    return string + "\n}"
   }
 }

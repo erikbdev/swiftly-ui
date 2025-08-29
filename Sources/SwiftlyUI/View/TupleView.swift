@@ -10,21 +10,15 @@ public struct TupleView<each Content: View>: View {
 
 @_spi(Internals)
 extension TupleView: PrimitiveView {
-  public nonisolated static func _makePrimitiveView(_ node: Node<Self>) {
-    repeat (each Content)._makeView(node.append(each node.object.content))
+  public nonisolated static func _makePrimitiveView(_ node: ViewNode<Self>) {
+    repeat (each node.object.content).addNode(node)
   }
 }
 
-extension Node where V: View {
-  fileprivate func append<T>(_ value: T) -> Node<T> {
-    let node = Node<T>(value)
-    node.parent = self
-    self.children.append(node)
-    return node
+extension View {
+  fileprivate func addNode<T>(_ parent: ViewNode<T>) {
+    let child = ViewNode(self)
+    parent.insertChild(child)
+    Self._makeView(child)
   }
 }
-
-// extension Node where V: View {
-//   fileprivate func tuple<T>(_: T.Type = T.self) -> Node<T> {
-//   }
-// }

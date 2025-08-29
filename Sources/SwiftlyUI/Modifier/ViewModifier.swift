@@ -24,7 +24,7 @@ extension ViewModifier {
     } else if Body.self is Never.Type {
       fatalError("\(Self.self).body cannot have a value of type `Never`")
     } else {
-      let child = Node(node.object.body(content: .init()))
+      let child = ViewNode(node.object.body(content: .init()))
       node.insertChild(child)
       Body._makeView(child)
     }
@@ -39,7 +39,7 @@ public struct _ViewModifier_Content<Modifier: ViewModifier>: View {
 
 @_spi(Internals)
 extension _ViewModifier_Content: PrimitiveView {
-  public static func _makePrimitiveView(_ node: Node<Self>) {}
+  public static func _makePrimitiveView(_ node: ViewNode<Self>) {}
 }
 
 extension Never: ViewModifier {

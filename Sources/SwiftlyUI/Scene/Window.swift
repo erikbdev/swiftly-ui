@@ -15,6 +15,6 @@ public struct Window<Content: View>: Scene {
 @_spi(Internals)
 extension Window: PrimitiveScene {
   public static func _makePrimitiveScene(_ node: Node<Self>) {
-    Content._makeView(node[\.content])
+    // Content._makeView(node[\.content])
   }
 }

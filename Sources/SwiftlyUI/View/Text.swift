@@ -24,5 +24,5 @@ public struct Text: View {
 
 @_spi(Internals)
 extension Text: PrimitiveView {
-  public nonisolated static func _makePrimitiveView(_ node: Node<Self>) {}
+  public nonisolated static func _makePrimitiveView(_ node: ViewNode<Self>) {}
 }

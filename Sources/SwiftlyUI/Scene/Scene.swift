@@ -30,7 +30,7 @@ extension Scene {
     } else if Body.self is Never.Type {
       fatalError("\(Self.self).body cannot have a value of type `Never`")
     } else {
-      Body._makeScene(node[\.body])
+      // Body._makeScene(node[\.body])
     }
   }
 }

@@ -44,14 +44,3 @@ extension _ForegroundStyleModifier: PrimitiveViewModifier {
     //        repeat (each Style)._makeShapeStyle(<#T##Node<Self>#>)
   }
 }
-
-extension ModifierValues where Root: View {
-  public var foregroundStyle: _ForegroundStyleModifierKey<Root>.Value? {
-    get { self[_ForegroundStyleModifierKey<Root>.self] }
-    set { self[_ForegroundStyleModifierKey<Root>.self] = newValue }
-  }
-}
-
-public struct _ForegroundStyleModifierKey<Root: View>: ModifierKey {
-  public typealias Value = AnyShapeStyle?
-}

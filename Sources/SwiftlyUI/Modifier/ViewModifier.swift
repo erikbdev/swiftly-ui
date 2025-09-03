@@ -43,9 +43,7 @@ extension _ViewModifier_Content: PrimitiveView {
 }
 
 extension Never: ViewModifier {
-  public typealias Body = Never
-
-  public func body(content: Content) -> Never { fatalError() }
+  public func body(content: _ViewModifier_Content<Never>) -> Never { fatalError() }
 }
 
 @_spi(Internals)
@@ -58,3 +56,14 @@ extension View {
     ModifiedContent(content: self, modifier: modifier)
   }
 }
+
+extension ModifiedContent: View where Content: View, Modifier: ViewModifier, Modifier.Body == Never {
+  public var body: Never { fatalError() }
+
+  // TODO: Add this modifier's properties as part of the view that is attached to.
+}
+
+// @_spi(Internals)
+// extension ModifiedContent: PrimitiveViewModifier where Modifier: ViewModifier {
+//     public static func _makePrimitiveViewModifier(_ node: Node<Self>) {}
+// }

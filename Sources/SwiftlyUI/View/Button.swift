@@ -6,7 +6,7 @@
 //
 
 public struct Button<Label: View>: View {
-  public let action: () -> Void
+  public var action: () -> Void
   public var label: Label
 
   public var body: Never { fatalError() }

@@ -6,9 +6,10 @@
 //
 
 public struct ZStack<Content: View>: View {
-  public var content: Content
-  public var body: Never { fatalError() }
   public var alignment: Alignment
+  public var content: Content
+
+  public var body: Never { fatalError() }
 
   public init(
     alignment: Alignment = .center,

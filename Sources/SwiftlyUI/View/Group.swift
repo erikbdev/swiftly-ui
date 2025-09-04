@@ -6,7 +6,7 @@
 //
 
 public struct Group<Content: View>: View {
-  public let content: Content
+  public var content: Content
   public var body: Never { fatalError() }
 
   public init(@ViewBuilder content: () -> Content) {

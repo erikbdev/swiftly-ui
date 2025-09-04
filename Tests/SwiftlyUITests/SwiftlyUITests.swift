@@ -8,14 +8,6 @@
 @_spi(Internals) import SwiftlyUI
 import Testing
 
-struct TestApp: App {
-  var body: some Scene {
-    WindowGroup {
-      CounterView()
-    }
-  }
-}
-
 struct CounterView: View {
   @State var count = 0
 

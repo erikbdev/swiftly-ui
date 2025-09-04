@@ -6,10 +6,10 @@
 //
 
 public struct VStack<Content: View>: View {
-  public var content: Content
-  public var body: Never { fatalError() }
   public var spacing: Int?
   public var alignment: HorizontalAlignment
+  public var content: Content
+  public var body: Never { fatalError() }
 
   public init(
     alignment: HorizontalAlignment = .center,

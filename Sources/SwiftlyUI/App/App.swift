@@ -29,7 +29,7 @@ public protocol App {
 
 extension App {
   public static func main() {
-    let runtime = Runtime(Self())
-    runtime.run()
+    let app = _App(Self())
+    app.run()
   }
 }

@@ -1,4 +1,4 @@
-final class Runtime<Root: App> {
+final class _App<Root: App> {
   var app: Root
   var backend: Root.Backend
   var environment: EnvironmentValues
@@ -11,6 +11,7 @@ final class Runtime<Root: App> {
 
   func run() {
     self.backend.runMainLoop {
+        // Update properties before evaluating body.
         
     }
   }

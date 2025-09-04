@@ -6,8 +6,7 @@
 //
 
 public struct Text: View {
-  var text: String
-  var modifiers: [any ViewModifier] = []
+  public var text: String
 
   public var body: Never { fatalError() }
 
@@ -17,7 +16,7 @@ public struct Text: View {
 
   public nonisolated func foregroundStyle<S: ShapeStyle>(_ style: S) -> Text {
     var base = self
-    base.modifiers.append(_ForegroundStyleModifier(AnyShapeStyle(style)))
+    // base.modifiers.append(_ForegroundStyleModifier(AnyShapeStyle(style)))
     return base
   }
 }

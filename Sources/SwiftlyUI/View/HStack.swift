@@ -6,10 +6,9 @@
 //
 
 public struct HStack<Content: View>: View {
-  public var content: Content
-
   private var spacing: Int?
   private var alignment: VerticalAlignment
+  public var content: Content
 
   public var body: Never { fatalError() }
 

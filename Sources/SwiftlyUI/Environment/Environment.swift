@@ -19,7 +19,12 @@ public struct Environment<Value>: DynamicProperty {
     case .value(let value):
       return value
     case .keyPath(let keyPath):
-      // TODO: not set yet
+      // TODO: not set yet, accessed outside of environment?
+      logger.warning(
+        """
+        Accessing value outside of View's body.
+        """
+      )
       return EnvironmentValues()[keyPath: keyPath]
     }
   }

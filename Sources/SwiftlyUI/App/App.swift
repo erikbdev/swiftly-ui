@@ -21,14 +21,15 @@ public protocol App {
   init()
 }
 
-extension App {
-  nonisolated func createBackend() -> Self.Backend {
-    Self.Backend()
-  }
-}
+// extension App {
+//   nonisolated func createBackend() -> Self.Backend {
+//     Self.Backend()
+//   }
+// }
 
 extension App {
   public static func main() {
-    let app = Self()
+    let runtime = Runtime(Self())
+    runtime.run()
   }
 }

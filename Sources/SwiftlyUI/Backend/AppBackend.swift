@@ -7,12 +7,8 @@
 
 import Foundation
 
-open class AppBackend {
-  public required init() {
-  }
+public protocol AppBackend {
+  init()
 
-  @MainActor
-  func runMainLoop(_ callback: @escaping @MainActor () -> Void) {
-    fatalError()
-  }
+  func runMainLoop(_ callback: @escaping @MainActor () -> Void)
 }

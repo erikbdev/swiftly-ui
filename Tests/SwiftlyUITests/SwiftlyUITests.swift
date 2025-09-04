@@ -8,34 +8,36 @@
 @_spi(Internals) import SwiftlyUI
 import Testing
 
+struct TestApp: App {
+  var body: some Scene {
+    WindowGroup {
+      CounterView()
+    }
+  }
+}
+
+struct CounterView: View {
+  @State var count = 0
+
+  var body: some View {
+    VStack {
+      Button("Decrease") {
+        count -= 1
+      }
+      Text("Count: \(count)")
+      Button("Increase") {
+        count += 1
+      }
+    }
+  }
+}
+
 @Suite("SwiftlyUITests")
 struct SwiftlyUITests {
-  struct TestApp: App {
-    var body: some Scene {
-      WindowGroup {
-        ContentView()
-      }
-    }
-  }
-
-  struct ContentView: View {
-    @State private var count = 0
-
-    var body: some View {
-      Color.red
-      Text("Hello, World")
-      // .foregroundStyle(.red)
-
-      if count > 0 {
-        Text("I have been clicked!")
-      }
-    }
-  }
-
   @Test func layoutNodes() async throws {
-    let content = ContentView()
+    let content = CounterView()
     let root = ViewNode(content)
-    ContentView._makeView(root)
+    CounterView._makeView(root)
     print(root.logTree())
   }
 }

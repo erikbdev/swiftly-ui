@@ -13,11 +13,9 @@ extension DynamicProperty {
   public func update() {}
 }
 
-struct _DynamicPropertyBuffer {
-  struct PropertyField {
-    let type: DynamicProperty.Type
-    let offset: Int
-  }
-
-  var properties: [PropertyField]
-}
+// func updateDynamicProperties<T>(
+//   _ value: T,
+//   environment: EnvironmentValues
+// ) {
+//     let mirror = Mirror(reflecting: value)
+// }

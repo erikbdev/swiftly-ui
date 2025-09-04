@@ -39,7 +39,7 @@ public struct _SceneModifier_Content<Modifier: SceneModifier>: Scene {
 
 @_spi(Internals)
 extension _SceneModifier_Content: PrimitiveScene {
-  public static func _makePrimitiveScene(_ node: Node<Self>) {}
+  public static func _makePrimitiveScene(_ node: SceneNode<Self>) {}
 }
 
 extension Never: SceneModifier {

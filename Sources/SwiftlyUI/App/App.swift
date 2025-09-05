@@ -21,12 +21,6 @@ public protocol App {
   init()
 }
 
-// extension App {
-//   nonisolated func createBackend() -> Self.Backend {
-//     Self.Backend()
-//   }
-// }
-
 extension App {
   public static func main() {
     let app = _App(Self())

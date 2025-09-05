@@ -25,6 +25,5 @@ public struct VStack<Content: View>: View {
 @_spi(Internals)
 extension VStack: PrimitiveView {
   public nonisolated static func _makePrimitiveView(_ node: ViewNode<Self>) {
-    // Content._makeView(node[\.content])
   }
 }

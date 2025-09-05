@@ -4,5 +4,5 @@ open class AnyNode {
   var children: [AnyNode] = []
   var root: AnyNode? { parent?.root ?? self }
 
-  func logTree(level: Int) -> String { "" }
+  func graphViz(level: Int) -> String { "" }
 }

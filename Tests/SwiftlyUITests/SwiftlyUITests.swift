@@ -20,6 +20,9 @@ struct CounterView: View {
       Button("Increase") {
         count += 1
       }
+      if count > 5 {
+        Text("Hello, there!")
+      }
     }
   }
 }
@@ -27,9 +30,8 @@ struct CounterView: View {
 @Suite("SwiftlyUITests")
 struct SwiftlyUITests {
   @Test func layoutNodes() async throws {
-    let content = CounterView()
-    let root = ViewNode(content)
+    let root = ViewNode(CounterView())
     CounterView._makeView(root)
-    print(root.logTree())
+    // print(root.graphViz())
   }
 }

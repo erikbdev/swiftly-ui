@@ -8,7 +8,7 @@
 public struct EnvironmentValues {
   private var storage: [ObjectIdentifier: Any] = [:]
 
-  subscript<T: EnvironmentKey>(_ key: T.Type) -> T.Value {
+  public subscript<T: EnvironmentKey>(_ key: T.Type) -> T.Value {
     get {
       storage[ObjectIdentifier(T.self), default: T.defaultValue] as! T.Value
     }

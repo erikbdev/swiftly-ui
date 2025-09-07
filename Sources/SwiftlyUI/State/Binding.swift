@@ -56,6 +56,20 @@ public struct Binding<Value> {
   }
 }
 
+extension Binding: PrimitiveDynamicProperty {
+  static func makePrimitiveDynamicProperty(
+    _ buffer: inout DynamicPropertyBuffer,
+    fieldOffset: Int
+  ) {
+  }
+
+  func bind(
+    _ buffer: inout DynamicPropertyBuffer,
+    fieldOffset: Int
+  ) {
+  }
+}
+
 extension Binding {
   public init(projectedValue base: Self) {
     self = base

@@ -37,3 +37,6 @@ public struct Environment<Value>: DynamicProperty {
     self.storage = .value(value)
   }
 }
+
+extension Environment: PrimitiveDynamicProperty {
+}

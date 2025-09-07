@@ -3,6 +3,4 @@ open class AnyNode {
   weak var parent: AnyNode?
   var children: [AnyNode] = []
   var root: AnyNode? { parent?.root ?? self }
-
-  func graphViz(level: Int) -> String { "" }
 }

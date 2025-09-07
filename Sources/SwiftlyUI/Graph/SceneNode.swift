@@ -1,3 +1,2 @@
 @_spi(Internals)
-public class SceneNode<T: Scene>: Node<T> {
-}
+public class SceneNode<T: Scene>: Node<T> {}

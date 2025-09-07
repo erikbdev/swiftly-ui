@@ -5,6 +5,7 @@
 //  Created by erikbdev on 8/14/25.
 //
 
+import CustomDump
 @_spi(Internals) import SwiftlyUI
 import Testing
 
@@ -32,6 +33,6 @@ struct SwiftlyUITests {
   @Test func layoutNodes() async throws {
     let root = ViewNode(CounterView())
     CounterView._makeView(root)
-    // print(root.graphViz())
+    customDump(root)
   }
 }

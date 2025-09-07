@@ -54,12 +54,12 @@ extension State where Value: ExpressibleByNilLiteral {
 }
 
 extension State: PrimitiveDynamicProperty {
-  // mutating func bind(_ buffer: inout DynamicPropertyBuffer, fieldOffset: Int) {
-  //   if let location = buffer.fields[fieldOffset]?.context as? AnyLocation<Value> {
-  //     self._location = location
-  //   } else {
-  //     // let location = AnyLocation
-  //     // buffer.fields[fieldOffset]?.context =
-  //   }
-  // }
+  static func makePrimitiveProperty(_ field: inout DynamicPropertyBuffer.Field) {
+    // if let location = field.context as? AnyLocation<Value> {
+    //   self._location = location
+    // } else {
+    //   // let location = AnyLocation
+    //   // buffer.fields[fieldOffset]?.context =
+    // }
+  }
 }

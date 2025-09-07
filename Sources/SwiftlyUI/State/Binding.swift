@@ -57,17 +57,7 @@ public struct Binding<Value> {
 }
 
 extension Binding: PrimitiveDynamicProperty {
-  static func makePrimitiveDynamicProperty(
-    _ buffer: inout DynamicPropertyBuffer,
-    fieldOffset: Int
-  ) {
-  }
-
-  func bind(
-    _ buffer: inout DynamicPropertyBuffer,
-    fieldOffset: Int
-  ) {
-  }
+  static func makePrimitiveProperty(_ buffer: inout DynamicPropertyBuffer.Field) {}
 }
 
 extension Binding {

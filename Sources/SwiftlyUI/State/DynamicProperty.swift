@@ -12,8 +12,12 @@ public protocol DynamicProperty {
 extension DynamicProperty {
   public func update() {}
 
-  static func makeProperty(_ field: inout DynamicPropertyBuffer.Field) {
-    // TODO: also map all other properties in extension
+  static func makeProperty(_ field: inout DynamicPropertyBuffer) {
+    if let primitive = self as? PrimitiveDynamicProperty.Type {
+      // primitive.makePrimitiveProperty(&field.fields)
+    } else {
+      let descriptors = DynamicPropertyBuffer.descriptors(of: Self.self)
+    }
   }
 }
 
@@ -37,7 +41,7 @@ struct DynamicPropertyBuffer {
 
   private static nonisolated(unsafe) var cache: [ObjectIdentifier: [FieldDescriptor]] = [:]
 
-  static func fields<T>(of type: T.Type) -> [FieldDescriptor] {
+  static func descriptors<T>(of type: T.Type) -> [FieldDescriptor] {
     if let cached = cache[ObjectIdentifier(type)] {
       return cached
     }

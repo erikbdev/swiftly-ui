@@ -16,9 +16,9 @@ public protocol View {
   var body: Self.Body { get }
 }
 
-@_spi(Internals)
+// @_spi(Internals)
 extension View {
-  public nonisolated static func _makeView(_ node: ViewNode<Self>) {
+  nonisolated static func _makeView(_ node: ViewNode<Self>) {
     if let prim = self as? any PrimitiveView.Type {
       func makePrimitiveView<T: PrimitiveView>(_: T.Type) {
         T._makePrimitiveView(unsafeDowncast(node, to: ViewNode<T>.self))
@@ -27,6 +27,7 @@ extension View {
     } else if Body.self is Never.Type {
       fatalError("\(Self.self).body cannot have a value of type `Never`")
     } else {
+      let fields = DynamicPropertyBuffer.descriptors(of: self)
       // let body = ViewNode(node.object.body)
       // node.insertChild(body)
       // Body._makeView(body)

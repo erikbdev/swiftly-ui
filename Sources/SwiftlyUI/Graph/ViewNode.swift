@@ -5,6 +5,11 @@ public class ViewNode<T: View>: Node<T> {
 
   func makeBody(_ operation: () -> Void) {
     // Resolve all properties before accessing body.
-    // let fields = DynamicProperties.fields(for: T.self)
+    let descriptors = DynamicPropertyBuffer.descriptors(of: T.self)
+    if properties.fields.isEmpty, !descriptors.isEmpty {
+      for descriptor in descriptors {
+        descriptor.type.makeProperty(&properties)
+      }
+    }
   }
 }

@@ -11,6 +11,7 @@ import Testing
 
 struct CounterView: View {
   @State var count = 0
+  @Clamped(range: 0...10) var clampedCounter
 
   var body: some View {
     VStack {
@@ -28,11 +29,37 @@ struct CounterView: View {
   }
 }
 
+@propertyWrapper
+private struct Clamped: DynamicProperty {
+  let range: ClosedRange<Int>
+  @State private var internalValue = 0
+
+  var wrappedValue: Int {
+    get {
+      let currentValue = internalValue
+      if internalValue > range.upperBound {
+        return range.upperBound
+      } else if internalValue < range.lowerBound {
+        return range.lowerBound
+      } else {
+        return currentValue
+      }
+    }
+    nonmutating set {
+      self.internalValue = max(range.lowerBound, min(range.upperBound, newValue))
+    }
+  }
+}
+
 @Suite("SwiftlyUITests")
 struct SwiftlyUITests {
   @Test func layoutNodes() async throws {
     let root = ViewNode(CounterView())
     CounterView._makeView(root)
     customDump(root)
+
+    // CounterView (Bool)
+    //  |-> VStack
+    //      |->
   }
 }

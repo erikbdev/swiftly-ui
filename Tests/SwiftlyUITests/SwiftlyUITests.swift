@@ -6,7 +6,7 @@
 //
 
 import CustomDump
-@_spi(Internals) import SwiftlyUI
+@_spi(Internals) @testable import SwiftlyUI
 import Testing
 
 struct CounterView: View {

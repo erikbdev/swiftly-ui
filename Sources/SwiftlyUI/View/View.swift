@@ -42,4 +42,9 @@ extension Never: View {
 @_spi(Internals)
 public protocol PrimitiveView: View where Body == Never {
   nonisolated static func _makePrimitiveView(_ node: ViewNode<Self>)
+  nonisolated static func _render()
+}
+
+extension PrimitiveView {
+    public nonisolated static func _render() {}
 }

@@ -32,21 +32,21 @@ struct CounterView: View {
 @propertyWrapper
 private struct Clamped: DynamicProperty {
   let range: ClosedRange<Int>
-  @State private var internalValue = 0
+  @State private var _value = 0
 
   var wrappedValue: Int {
     get {
-      let currentValue = internalValue
-      if internalValue > range.upperBound {
+      let currentValue = _value
+      if currentValue > range.upperBound {
         return range.upperBound
-      } else if internalValue < range.lowerBound {
+      } else if currentValue < range.lowerBound {
         return range.lowerBound
       } else {
         return currentValue
       }
     }
     nonmutating set {
-      self.internalValue = max(range.lowerBound, min(range.upperBound, newValue))
+      self._value = max(range.lowerBound, min(range.upperBound, newValue))
     }
   }
 }
@@ -58,7 +58,7 @@ struct SwiftlyUITests {
     CounterView._makeView(root)
     customDump(root)
 
-    // CounterView (Bool)
+    // CounterView
     //  |-> VStack
     //      |->
   }

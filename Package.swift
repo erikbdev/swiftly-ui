@@ -10,7 +10,8 @@ let package = Package(
     .library(
       name: "SwiftlyUI",
       targets: ["SwiftlyUI"]
-    )
+    ),
+    .library(name: "GtkUI", targets: ["GtkUI"]),
   ],
   dependencies: [
     .package(url: "https://github.com/apple/swift-log", exact: "1.6.4"),
@@ -28,6 +29,12 @@ let package = Package(
       dependencies: [
         "SwiftlyUI",
         .product(name: "CustomDump", package: "swift-custom-dump"),
+      ]
+    ),
+    .target(
+      name: "GtkUI",
+      dependencies: [
+        "SwiftlyUI"
       ]
     ),
   ]

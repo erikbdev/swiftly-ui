@@ -28,7 +28,7 @@ public struct State<Value>: DynamicProperty {
 
   public var projectedValue: Binding<Value> {
     guard let _location else {
-      logger.critical(
+      logger.notice(
         "Accessing State's value outside of being installed on a View. This will result in a constant Binding of the initial value and will not update."
       )
       return .constant(_value)
@@ -54,12 +54,14 @@ extension State where Value: ExpressibleByNilLiteral {
 }
 
 extension State: PrimitiveDynamicProperty {
-  static func makePrimitiveProperty(_ field: inout DynamicPropertyBuffer.Field) {
-    // if let location = field.context as? AnyLocation<Value> {
-    //   self._location = location
-    // } else {
-    //   // let location = AnyLocation
-    //   // buffer.fields[fieldOffset]?.context =
-    // }
+  mutating func _makeDynamicProperty(_ field: inout DynamicPropertyBuffer.Field) {
+    if let context = field.context as? AnyLocation<Value> {
+      self._location = context
+      self._value = context.get()
+    } else {
+      let location = self._location ?? AnyLocation(StoredLocation(value: self._value))
+      self._location = location
+      field.context = location
+    }
   }
 }

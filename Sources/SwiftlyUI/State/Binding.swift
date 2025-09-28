@@ -54,15 +54,9 @@ public struct Binding<Value> {
     base.transaction.animation = animation
     return base
   }
-}
 
-extension Binding: PrimitiveDynamicProperty {
-  static func makePrimitiveProperty(_ buffer: inout DynamicPropertyBuffer.Field) {}
-}
-
-extension Binding {
-  public init(projectedValue base: Self) {
-    self = base
+  public init(projectedValue: Self) {
+    self = projectedValue
   }
 
   public init(
@@ -120,6 +114,19 @@ extension Binding {
 
   public static func constant(_ value: Value) -> Self {
     Binding(value: value, location: AnyLocation(ConstantLocation(value: value)))
+  }
+}
+
+extension Binding: PrimitiveDynamicProperty {
+  mutating func _makeDynamicProperty(_ field: inout DynamicPropertyBuffer.Field) {
+    if let context = field.context as? AnyLocation<Value> {
+      self._location = context
+      self._value = context.get()
+    } else {
+      let location = self._location
+      self._value = location.get()
+      field.context = location
+    }
   }
 }
 

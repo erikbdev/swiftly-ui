@@ -27,10 +27,9 @@ extension View {
     } else if Body.self is Never.Type {
       fatalError("\(Self.self).body cannot have a value of type `Never`")
     } else {
-      let fields = DynamicPropertyBuffer.descriptors(of: self)
-      // let body = ViewNode(node.object.body)
-      // node.insertChild(body)
-      // Body._makeView(body)
+      let body = ViewNode(node.object.body)
+      node.insertChild(body)
+      Body._makeView(body)
     }
   }
 }
@@ -46,5 +45,5 @@ public protocol PrimitiveView: View where Body == Never {
 }
 
 extension PrimitiveView {
-    public nonisolated static func _render() {}
+  public nonisolated static func _render() {}
 }

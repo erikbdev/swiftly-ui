@@ -38,3 +38,13 @@ struct FunctionLocation<Value>: _Location {
     self.setValue(value, transaction)
   }
 }
+
+struct StoredLocation<Value>: _Location {
+  var value: Value
+
+  func get() -> Value { value }
+
+  mutating func set(_ value: Value, transaction: Transaction) {
+    self.value = value
+  }
+}

@@ -12,6 +12,7 @@ import Testing
 struct CounterView: View {
   @State var count = 0
   @Clamped(range: 0...10) var clampedCounter
+  @State var greetingName = "John"
 
   var body: some View {
     VStack {
@@ -23,7 +24,7 @@ struct CounterView: View {
         count += 1
       }
       if count > 5 {
-        Text("Hello, there!")
+        Text("Hello, \(greetingName)")
       }
     }
   }
@@ -55,11 +56,24 @@ private struct Clamped: DynamicProperty {
 struct SwiftlyUITests {
   @Test func layoutNodes() async throws {
     let root = ViewNode(CounterView())
-    CounterView._makeView(root)
-    customDump(root)
+    root.reevaluate()
+    customDump(root, name: "First time render")
 
-    // CounterView
-    //  |-> VStack
-    //      |->
+    root.property(\.$count) { $property in
+      property = 6
+    }
+
+    root.property(\.$greetingName) { $property in
+      property = "Jane"
+    }
+    root.reevaluate()
+    customDump(root, name: "After setting  counter to 6")
+  }
+
+  @Test func dynamicPropertiesCounter() {
+    let descriptors = DynamicPropertyBuffer.descriptors(of: CounterView.self)
+    // #expect(descriptors.count == 2)
+
+    dump(descriptors)
   }
 }

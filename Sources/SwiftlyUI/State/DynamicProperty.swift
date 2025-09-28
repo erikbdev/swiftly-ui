@@ -11,53 +11,58 @@ public protocol DynamicProperty {
 
 extension DynamicProperty {
   public func update() {}
-
-  static func makeProperty(_ field: inout DynamicPropertyBuffer) {
-    if let primitive = self as? PrimitiveDynamicProperty.Type {
-      // primitive.makePrimitiveProperty(&field.fields)
-    } else {
-      let descriptors = DynamicPropertyBuffer.descriptors(of: Self.self)
-    }
-  }
 }
 
 protocol PrimitiveDynamicProperty: DynamicProperty {
-  static func makePrimitiveProperty(_ field: inout DynamicPropertyBuffer.Field)
+  mutating func _makeDynamicProperty(_ field: inout DynamicPropertyBuffer.Field)
 }
 
 struct DynamicPropertyBuffer {
-  var fields: [Field] = []
-
-  struct FieldDescriptor {
-    let type: DynamicProperty.Type
-    let offset: Int
-    let name: String
-  }
+  var fields: [IndexPath: Field] = [:]
 
   struct Field {
-    let descriptor: FieldDescriptor
+    let type: DynamicProperty.Type
     var context: AnyObject?
   }
 
-  private static nonisolated(unsafe) var cache: [ObjectIdentifier: [FieldDescriptor]] = [:]
+  struct IndexPath: Hashable {
+    /// Each element is an index
+    let indices: [Int]
 
-  static func descriptors<T>(of type: T.Type) -> [FieldDescriptor] {
+    static var root: IndexPath { IndexPath(indices: []) }
+
+    func appending(_ index: Int) -> IndexPath {
+      IndexPath(indices: indices + [index])
+    }
+  }
+}
+
+struct DynamicPropertyDescriptor {
+  let type: DynamicProperty.Type
+  let offset: Int
+  let name: String
+}
+
+extension DynamicPropertyBuffer {
+  private static nonisolated(unsafe) var cache: [ObjectIdentifier: [DynamicPropertyDescriptor]] = [:]
+
+  static func descriptors<T>(of type: T.Type) -> [DynamicPropertyDescriptor] {
     if let cached = cache[ObjectIdentifier(type)] {
       return cached
     }
-    var fields: [FieldDescriptor] = []
+    var fields: [DynamicPropertyDescriptor] = []
     let childCount = _getRecursiveChildCount(type)
     for i in 0..<childCount {
       let offset = _getChildOffset(type, index: i)
       var field = _FieldReflectionMetadata()
       let fieldType = _getChildMetadata(type, index: i, fieldMetadata: &field)
-      let fieldName = field.name.flatMap(String.init(cString:)) ?? ""
-      defer { field.freeFunc?(field.name) }
       guard let dynamicPropertyType = fieldType as? DynamicProperty.Type else {
         continue
       }
+      let fieldName = field.name.flatMap(String.init(cString:)) ?? ""
+      defer { field.freeFunc?(field.name) }
       fields.append(
-        FieldDescriptor(
+        DynamicPropertyDescriptor(
           type: dynamicPropertyType,
           offset: offset,
           name: fieldName

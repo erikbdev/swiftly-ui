@@ -39,6 +39,6 @@ public struct Environment<Value>: DynamicProperty {
 }
 
 extension Environment: PrimitiveDynamicProperty {
-  static func makePrimitiveProperty(_ field: inout DynamicPropertyBuffer.Field) {
+  mutating func _makeDynamicProperty(_ field: inout DynamicPropertyBuffer.Field) {
   }
 }

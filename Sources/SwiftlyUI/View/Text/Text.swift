@@ -9,20 +9,20 @@ public struct Text: View {
   let storage: [_Storage]
 
   public init(verbatim content: String) {
-      self.storage = [_Storage(content: content)]
+    self.storage = [_Storage(content: content, modifiers: [])]
   }
 
   public init<S: StringProtocol>(_ content: S) {
-      self.storage = [_Storage(content: String(content))]
+    self.init(verbatim: String(content))
   }
 
-  init(storage: [_Storage]) {
-      self.storage = storage
+  init(_ storage: [_Storage]) {
+    self.storage = storage
   }
 
   public var body: Never { fatalError() }
 
-  var rawText: String { storage.reduce("") { $0 + $1.content } }
+  var stringValue: String { storage.reduce("") { $0 + $1.content } }
 
   public nonisolated func foregroundStyle<S: ShapeStyle>(_ style: S) -> Text {
     var base = self
@@ -30,9 +30,14 @@ public struct Text: View {
     return base
   }
 
-  struct _Storage: Hashable {
-      let content: String
-      // let modifiers: _Modifier
+  struct _Storage {
+    let content: String
+    let modifiers: [_Modifier]
+
+    enum _Modifier {
+      case foregroundStyle(AnyShapeStyle)
+      // case font(Font)
+    }
   }
 }
 
@@ -42,5 +47,5 @@ extension Text: PrimitiveView {
 }
 
 public func + (lhs: Text, rhs: Text) -> Text {
-    Text(storage: lhs.storage + rhs.storage)
+  Text(lhs.storage + rhs.storage)
 }

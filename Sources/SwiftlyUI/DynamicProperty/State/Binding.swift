@@ -118,7 +118,7 @@ public struct Binding<Value> {
 }
 
 extension Binding: PrimitiveDynamicProperty {
-  mutating func _makeDynamicProperty(_ field: inout DynamicPropertyBuffer.Field) {
+  mutating func _makeDynamicProperty(_ field: inout DynamicPropertyBuffer.Field, inputs: DynamicPropertyInputs) {
     if let context = field.context as? AnyLocation<Value> {
       self._location = context
       self._value = context.get()

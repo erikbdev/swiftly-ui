@@ -13,8 +13,12 @@ extension DynamicProperty {
   public func update() {}
 }
 
+struct DynamicPropertyInputs {
+  var environmentValues: EnvironmentValues
+}
+
 protocol PrimitiveDynamicProperty: DynamicProperty {
-  mutating func _makeDynamicProperty(_ field: inout DynamicPropertyBuffer.Field)
+  mutating func _makeDynamicProperty(_ field: inout DynamicPropertyBuffer.Field, inputs: DynamicPropertyInputs)
 }
 
 struct DynamicPropertyBuffer {

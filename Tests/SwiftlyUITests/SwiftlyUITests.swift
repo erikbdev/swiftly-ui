@@ -20,6 +20,8 @@ struct CounterView: View {
         count -= 1
       }
       Text("Count: \(count)")
+      DefaultValueEnvironmentView()
+        .environment(\.defaultText, "Jose")
       Button("Increase") {
         count += 1
       }
@@ -27,6 +29,14 @@ struct CounterView: View {
         Text("Hello, \(greetingName)")
       }
     }
+  }
+}
+
+private struct DefaultValueEnvironmentView: View {
+  @Environment(\.defaultText) var environmentName
+
+  var body: some View {
+    Text("Environment default name: \(environmentName)")
   }
 }
 
@@ -56,8 +66,6 @@ private struct Clamped: DynamicProperty {
 struct SwiftlyUITests {
   @Test func layoutNodes() async throws {
     let root = ViewNode(CounterView())
-    root.reevaluate()
-    customDump(root, name: "First time render")
 
     root.property(\.$count) { $property in
       property = 6
@@ -75,5 +83,16 @@ struct SwiftlyUITests {
     // #expect(descriptors.count == 2)
 
     dump(descriptors)
+  }
+}
+
+extension EnvironmentValues {
+  private enum DefaultValue: EnvironmentKey {
+    static let defaultValue = "Jane"
+  }
+
+  var defaultText: String {
+    get { self[DefaultValue.self] }
+    set { self[DefaultValue.self] = newValue }
   }
 }

@@ -10,10 +10,16 @@ public struct EnvironmentValues {
 
   public subscript<T: EnvironmentKey>(_ key: T.Type) -> T.Value {
     get {
-      storage[ObjectIdentifier(T.self), default: T.defaultValue] as! T.Value
+      if storage.keys.contains(ObjectIdentifier(T.self)) {
+        unsafeBitCast(storage[ObjectIdentifier(T.self)], to: T.Value.self)
+      } else {
+        T.defaultValue
+      }
     }
     set {
       storage[ObjectIdentifier(T.self)] = newValue
     }
   }
 }
+
+extension EnvironmentValues: @unchecked Sendable {}

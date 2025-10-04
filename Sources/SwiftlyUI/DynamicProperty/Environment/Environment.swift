@@ -7,7 +7,7 @@
 
 @propertyWrapper
 public struct Environment<Value>: DynamicProperty {
-  fileprivate enum Storage {
+  private enum Storage {
     case keyPath(KeyPath<EnvironmentValues, Value>)
     case value(Value)
   }
@@ -19,10 +19,12 @@ public struct Environment<Value>: DynamicProperty {
     case .value(let value):
       return value
     case .keyPath(let keyPath):
-      // TODO: not set yet, accessed outside of environment?
-      logger.warning(
+      logger.critical(
         """
-        Accessing value outside of View's body.
+        Accessing Environment<\(Value.self)>'s value outside of \
+        being installed on a View. \
+        This will always read the default value \
+        and will not update.
         """
       )
       return EnvironmentValues()[keyPath: keyPath]
@@ -32,13 +34,20 @@ public struct Environment<Value>: DynamicProperty {
   public init(_ keyPath: KeyPath<EnvironmentValues, Value>) {
     self.storage = .keyPath(keyPath)
   }
-
-  mutating func update(with value: Value) {
-    self.storage = .value(value)
-  }
 }
 
 extension Environment: PrimitiveDynamicProperty {
-  mutating func _makeDynamicProperty(_ field: inout DynamicPropertyBuffer.Field) {
+  mutating func _makeDynamicProperty(_ field: inout DynamicPropertyBuffer.Field, inputs: DynamicPropertyInputs) {
+    guard case .keyPath(let keyPath) = storage else {
+      return
+    }
+
+    self.storage = .value(inputs.environmentValues[keyPath: keyPath])
   }
+}
+
+internal final class EnvironmentValuesBox {
+  var environmentValues = EnvironmentValues()
+
+  init() {}
 }

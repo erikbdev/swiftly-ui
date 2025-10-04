@@ -7,7 +7,12 @@ public class ViewNode<T: View>: Node<T> {
     super.init(object)
 
     /// Bind properties
-    bindProperties(&self.object, storage: &properties)
+    bindProperties(
+      &self.object,
+      storage: &properties,
+      inputs: DynamicPropertyInputs(environmentValues: self.parent?.environmentValues ?? self.environmentValues)
+    )
+    reevaluate()
   }
 
   func property<V, R>(_ keyPath: KeyPath<T, Binding<V>>, operation: (Binding<V>) -> R) -> R {
@@ -15,8 +20,12 @@ public class ViewNode<T: View>: Node<T> {
   }
 
   func reevaluate() {
-    let oldValue = children
     self.children.removeAll(keepingCapacity: true)
+    bindProperties(
+      &self.object,
+      storage: &properties,
+      inputs: DynamicPropertyInputs(environmentValues: parent?.environmentValues ?? self.environmentValues)
+    )
     T._makeView(self)
   }
 }
@@ -24,7 +33,8 @@ public class ViewNode<T: View>: Node<T> {
 private func bindProperties<T>(
   _ value: inout T,
   storage: inout DynamicPropertyBuffer,
-  indexPath: DynamicPropertyBuffer.IndexPath = .root
+  indexPath: DynamicPropertyBuffer.IndexPath = .root,
+  inputs: DynamicPropertyInputs
 ) {
   let descriptors = DynamicPropertyBuffer.descriptors(of: T.self)
   guard !descriptors.isEmpty else { return }
@@ -36,7 +46,8 @@ private func bindProperties<T>(
         descriptor: descriptor,
         of: descriptor.type,
         storage: &storage,
-        indexPath: indexPath
+        indexPath: indexPath,
+        inputs: inputs
       )
     }
   }
@@ -47,7 +58,8 @@ private func bindProperty<D: DynamicProperty>(
   descriptor: DynamicPropertyDescriptor,
   of type: D.Type,
   storage: inout DynamicPropertyBuffer,
-  indexPath: DynamicPropertyBuffer.IndexPath
+  indexPath: DynamicPropertyBuffer.IndexPath,
+  inputs: DynamicPropertyInputs
 ) {
   let property = ptr.assumingMemoryBound(to: D.self)
   defer { property.pointee.update() }
@@ -56,19 +68,21 @@ private func bindProperty<D: DynamicProperty>(
     return bindProperties(
       &property.pointee,
       storage: &storage,
-      indexPath: indexPath
+      indexPath: indexPath,
+      inputs: inputs
     )
   }
   var field = storage.fields[indexPath, default: .init(type: D.self)]
   assert(field.type == D.self)
-  _cast(type: primitiveType, pointer: property, field: &field)
+  _cast(type: primitiveType, pointer: property, field: &field, inputs: inputs)
   storage.fields[indexPath] = field
 }
 
 private func _cast<T: PrimitiveDynamicProperty, D: DynamicProperty>(
   type: T.Type,
   pointer: UnsafeMutablePointer<D>,
-  field: inout DynamicPropertyBuffer.Field
+  field: inout DynamicPropertyBuffer.Field,
+  inputs: DynamicPropertyInputs
 ) {
-  pointer.withMemoryRebound(to: T.self, capacity: 1) { $0.pointee._makeDynamicProperty(&field) }
+  pointer.withMemoryRebound(to: T.self, capacity: 1) { $0.pointee._makeDynamicProperty(&field, inputs: inputs) }
 }

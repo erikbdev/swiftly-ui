@@ -1,1 +1,1 @@
-@_exported import SwiftlyUI
+@_exported import SwiftlyUICore

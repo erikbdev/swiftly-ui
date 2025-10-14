@@ -1,4 +1,4 @@
-@_spi(Renderer) import SwiftlyUI
+@_spi(Renderer) import SwiftlyUICore
 
 open class GtkBackend: AppBackend {
   public typealias Component = AnyObject

@@ -7,10 +7,8 @@ let package = Package(
   name: "SwiftlyUI",
   platforms: [.macOS(.v14)],
   products: [
-    .library(
-      name: "SwiftlyUI",
-      targets: ["SwiftlyUI"]
-    ),
+    .library(name: "SwiftlyUI", targets: ["SwiftlyUI"]),
+    .library(name: "SwiftlyUICore", targets: ["SwiftlyUICore"]),
     .library(name: "GtkUI", targets: ["GtkUI"]),
   ],
   dependencies: [
@@ -21,20 +19,26 @@ let package = Package(
     .target(
       name: "SwiftlyUI",
       dependencies: [
+        .target(name: "GtkUI", condition: .when(platforms: [.linux, .macOS, .windows]))
+      ]
+    ),
+    .target(
+      name: "SwiftlyUICore",
+      dependencies: [
         .product(name: "Logging", package: "swift-log")
       ]
     ),
     .testTarget(
-      name: "SwiftlyUITests",
+      name: "SwiftlyUICoreTests",
       dependencies: [
-        "SwiftlyUI",
+        "SwiftlyUICore",
         .product(name: "CustomDump", package: "swift-custom-dump"),
       ]
     ),
     .target(
       name: "GtkUI",
       dependencies: [
-        "SwiftlyUI"
+        "SwiftlyUICore"
       ]
     ),
   ]

@@ -29,6 +29,7 @@ struct CounterView: View {
         Text("Hello, \(greetingName)")
       }
     }
+    EmptyView()
   }
 }
 
@@ -62,6 +63,14 @@ private struct Clamped: DynamicProperty {
   }
 }
 
+private struct SwiftlyUIVisitor: ViewVisitor {
+  let viewVisited: (ObjectIdentifier) -> Void
+
+  func visit<V>(_ view: V) where V: View {
+    viewVisited(ObjectIdentifier(V.self))
+  }
+}
+
 @Suite("SwiftlyUITests")
 struct SwiftlyUITests {
   @Test func layoutNodes() async throws {
@@ -83,6 +92,18 @@ struct SwiftlyUITests {
     // #expect(descriptors.count == 2)
 
     dump(descriptors)
+  }
+
+  @Test func testViewVisitor() {
+    var storage: [ObjectIdentifier] = []
+    let visitor = SwiftlyUIVisitor {
+      storage.append($0)
+    }
+
+    let root = ViewNode(CounterView())
+    root.object.visitChildren(visitor)
+
+    customDump(storage, name: "\(CounterView.self) body")
   }
 }
 

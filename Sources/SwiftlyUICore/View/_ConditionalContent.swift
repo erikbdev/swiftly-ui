@@ -23,4 +23,11 @@ extension _ConditionalContent: PrimitiveView {
     //   FalseContent._makeView(scope)
     // }
   }
+
+  public nonisolated func _visitChildren<V>(_ visitor: V) where V: ViewVisitor {
+    switch self.content {
+    case .trueContent(let content): visitor.visit(content)
+    case .falseContent(let content): visitor.visit(content)
+    }
+  }
 }

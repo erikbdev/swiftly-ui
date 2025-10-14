@@ -24,6 +24,9 @@ public struct Toggle<Label: View>: View {
 @_spi(Internals)
 extension Toggle: PrimitiveView {
   public nonisolated static func _makeView(_ node: ViewNode<Self>) {}
+  public nonisolated func _visitChildren<V: ViewVisitor>(_ visitor: V) {
+    visitor.visit(label)
+  }
 }
 
 public struct ToggleStyle: Sendable {

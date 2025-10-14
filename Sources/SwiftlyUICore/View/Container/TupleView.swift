@@ -13,6 +13,9 @@ extension TupleView: PrimitiveView {
   public nonisolated static func _makeView(_ node: ViewNode<Self>) {
     repeat (each node.object.content).addNode(node)
   }
+  public nonisolated func _visitChildren<V: ViewVisitor>(_ visitor: V) {
+    repeat (visitor.visit(each content))
+  }
 }
 
 extension View {

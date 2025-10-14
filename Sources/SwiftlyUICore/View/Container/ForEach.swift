@@ -41,4 +41,10 @@ extension ForEach: PrimitiveView where Content: View {
     //   Content._makeView(child)
     // }
   }
+
+  public nonisolated func _visitChildren<V: ViewVisitor>(_ visitor: V) {
+    for element in self.data {
+      visitor.visit(content(element))
+    }
+  }
 }

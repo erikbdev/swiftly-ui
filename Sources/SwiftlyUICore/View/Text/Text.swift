@@ -30,13 +30,18 @@ public struct Text: View {
     return base
   }
 
+  public nonisolated func font(_ font: Font) -> Text {
+    var base = self
+    return base
+  }
+
   struct _Storage {
     let content: String
     let modifiers: [_Modifier]
 
     enum _Modifier {
       case foregroundStyle(AnyShapeStyle)
-      // case font(Font)
+      case font(Font)
     }
   }
 }
@@ -44,6 +49,7 @@ public struct Text: View {
 @_spi(Internals)
 extension Text: PrimitiveView {
   public nonisolated static func _makeView(_ node: ViewNode<Self>) {}
+  public nonisolated func _visitChildren<V>(_ visitor: V) where V: ViewVisitor {}
 }
 
 public func + (lhs: Text, rhs: Text) -> Text {

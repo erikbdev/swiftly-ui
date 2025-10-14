@@ -16,5 +16,10 @@ extension Optional: PrimitiveView where Wrapped: PrimitiveView {
     // // Wrapped._makeView(node[\.wrapped])
   }
 
-  private var wrapped: Wrapped { fatalError() }
+  public nonisolated func _visitChildren<V>(_ visitor: V) where V: ViewVisitor {
+    switch self {
+    case .none: break
+    case .some(let primitive): visitor.visit(primitive)
+    }
+  }
 }

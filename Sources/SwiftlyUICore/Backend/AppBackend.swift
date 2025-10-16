@@ -8,7 +8,7 @@
 import Foundation
 
 public protocol AppBackend {
-  associatedtype Component
+  // associatedtype Component
 
   init()
 

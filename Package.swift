@@ -38,7 +38,16 @@ let package = Package(
     .target(
       name: "GtkUI",
       dependencies: [
-        "SwiftlyUICore"
+        "SwiftlyUICore",
+        "CGTK",
+      ]
+    ),
+    .systemLibrary(
+      name: "CGTK",
+      pkgConfig: "gtk4",
+      providers: [
+        .brew(["gtk4"]),
+        .apt(["libgtk4"]),
       ]
     ),
   ]

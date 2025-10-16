@@ -1,9 +1,14 @@
+import CGTK
 @_spi(Renderer) import SwiftlyUICore
 
 open class GtkBackend: AppBackend {
-  public typealias Component = AnyObject
+  // public typealias Component = AnyObject
+  var appRef: UnsafeMutablePointer<GtkApplication>?
 
-  public required init() {}
+  public required init() {
+    // TODO: Render first render screen, then get all information before starting application.
+  }
 
-  public func runMainLoop(_ callback: @escaping @MainActor () -> Void) {}
+  public func runMainLoop(_ callback: @escaping @MainActor () -> Void) {
+  }
 }

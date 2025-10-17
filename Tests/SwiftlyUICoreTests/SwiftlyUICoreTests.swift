@@ -105,6 +105,33 @@ struct SwiftlyUITests {
 
     customDump(storage, name: "\(CounterView.self) body")
   }
+
+  @Test func testVisitChildren() {
+    let view = VStack {
+      Text("Hello")
+      Text("Bye")
+      if true {
+        Text("Ok!")
+      } else {
+        EmptyView()
+      }
+      Button {
+      } label: {
+        Group {
+          Text("Hello")
+        }
+      }
+    }
+
+    var count = 0
+    let visitor = SwiftlyUIVisitor { _ in
+      count += 1
+    }
+
+    view.visitChildren(visitor)
+
+    #expect(count == 2)
+  }
 }
 
 extension EnvironmentValues {

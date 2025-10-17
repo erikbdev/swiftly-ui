@@ -19,7 +19,7 @@ let package = Package(
     .target(
       name: "SwiftlyUI",
       dependencies: [
-        .target(name: "GtkUI", condition: .when(platforms: [.linux, .macOS, .windows]))
+        .target(name: "GtkUI", condition: .when(platforms: [.linux, .windows]))
       ]
     ),
     .target(

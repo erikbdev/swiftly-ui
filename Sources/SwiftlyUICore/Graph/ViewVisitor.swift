@@ -7,7 +7,7 @@ extension View {
     if let prim = self as? any PrimitiveView {
       prim._visitChildren(visitor)
     } else {
-      body.visitChildren(visitor)
+      visitor.visit(body)
     }
   }
 }

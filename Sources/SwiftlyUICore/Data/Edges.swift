@@ -5,7 +5,7 @@
 //  Created by erikbdev on 8/14/25.
 //
 
-public struct HorizontalEdge: Sendable, Codable {
+public struct HorizontalEdge: Sendable {
   public static let leading = HorizontalEdge()
   public static let trailing = HorizontalEdge()
 
@@ -20,7 +20,7 @@ public struct HorizontalEdge: Sendable, Codable {
   }
 }
 
-public struct VerticalEdge: Sendable, Codable {
+public struct VerticalEdge: Sendable {
   public static let top = VerticalEdge()
   public static let bottom = VerticalEdge()
 

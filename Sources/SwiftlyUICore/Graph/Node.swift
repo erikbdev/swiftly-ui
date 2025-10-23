@@ -1,4 +1,6 @@
-import Foundation
+#if canImport(Foundation)
+  import Foundation
+#endif
 
 @_spi(Internals)
 public class Node<V>: AnyNode {

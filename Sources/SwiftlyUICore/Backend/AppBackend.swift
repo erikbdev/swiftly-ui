@@ -5,14 +5,16 @@
 //  Created by erikbdev on 8/14/25.
 //
 
-import Foundation
+#if canImport(Foundation)
+  import Foundation
+#endif
 
 public protocol AppBackend {
   // associatedtype Component
 
   init()
 
-  func runMainLoop(_ callback: @escaping @MainActor () -> Void)
+  func runMainLoop(_ callback: @escaping () -> Void)
 
   // @_spi(Internals)
   // func createText(_ node: ViewNode<Text>) -> Component

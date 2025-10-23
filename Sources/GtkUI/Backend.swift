@@ -9,6 +9,6 @@ open class GtkBackend: AppBackend {
     // TODO: Render first render screen, then get all information before starting application.
   }
 
-  public func runMainLoop(_ callback: @escaping @MainActor () -> Void) {
+  public func runMainLoop(_ callback: @escaping () -> Void) {
   }
 }

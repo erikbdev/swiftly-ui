@@ -103,14 +103,16 @@ public struct Binding<Value> {
     }
   }
 
-  public init<V>(_ base: Binding<V>) where Value == AnyHashable, V: Hashable {
-    let location = base._location
-    self.init {
-      AnyHashable(location.get())
-    } set: {
-      location.set($0.base as! V, transaction: $1)
+  #if !hasFeature(Embedded)
+    public init<V>(_ base: Binding<V>) where Value == AnyHashable, V: Hashable {
+      let location = base._location
+      self.init {
+        AnyHashable(location.get())
+      } set: {
+        location.set($0.base as! V, transaction: $1)
+      }
     }
-  }
+  #endif
 
   public static func constant(_ value: Value) -> Self {
     Binding(value: value, location: AnyLocation(ConstantLocation(value: value)))

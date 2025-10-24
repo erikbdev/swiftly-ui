@@ -78,8 +78,10 @@ extension ViewBuilder {
   }
 }
 
-extension ViewBuilder {
-  public static func buildLimitedAvailability<Content: View>(_ content: Content) -> AnyView {
-    AnyView(content)
+#if !hasFeature(Embedded)
+  extension ViewBuilder {
+    public static func buildLimitedAvailability<Content: View>(_ content: Content) -> AnyView {
+      AnyView(content)
+    }
   }
-}
+#endif

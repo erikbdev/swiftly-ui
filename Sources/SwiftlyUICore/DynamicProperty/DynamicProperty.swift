@@ -5,6 +5,8 @@
 //  Created by erikbdev on 8/14/25.
 //
 
+import Foundation
+
 public protocol DynamicProperty {
   mutating func update()
 }
@@ -48,32 +50,35 @@ struct DynamicPropertyDescriptor {
 }
 
 extension DynamicPropertyBuffer {
-  private static nonisolated(unsafe) var cache: [ObjectIdentifier: [DynamicPropertyDescriptor]] = [:]
+  private nonisolated(unsafe) static var cache: [ObjectIdentifier: [DynamicPropertyDescriptor]] = [:]
+  private static let queue = DispatchQueue(label: "dev.erikb.swiftly-ui.DynamicPropertyBufferQueue")
 
-  static func descriptors<T>(of type: T.Type) -> [DynamicPropertyDescriptor] {
-    if let cached = cache[ObjectIdentifier(type)] {
-      return cached
-    }
-    var fields: [DynamicPropertyDescriptor] = []
-    let childCount = _getRecursiveChildCount(type)
-    for i in 0..<childCount {
-      let offset = _getChildOffset(type, index: i)
-      var field = _FieldReflectionMetadata()
-      let fieldType = _getChildMetadata(type, index: i, fieldMetadata: &field)
-      guard let dynamicPropertyType = fieldType as? DynamicProperty.Type else {
-        continue
+  nonisolated static func descriptors<T>(of type: T.Type) -> [DynamicPropertyDescriptor] {
+    queue.sync {
+      if let cached = cache[ObjectIdentifier(type)] {
+        return cached
       }
-      let fieldName = field.name.flatMap(String.init(cString:)) ?? ""
-      defer { field.freeFunc?(field.name) }
-      fields.append(
-        DynamicPropertyDescriptor(
-          type: dynamicPropertyType,
-          offset: offset,
-          name: fieldName
+      var fields: [DynamicPropertyDescriptor] = []
+      let childCount = _getRecursiveChildCount(type)
+      for i in 0..<childCount {
+        let offset = _getChildOffset(type, index: i)
+        var field = _FieldReflectionMetadata()
+        let fieldType = _getChildMetadata(type, index: i, fieldMetadata: &field)
+        guard let dynamicPropertyType = fieldType as? DynamicProperty.Type else {
+          continue
+        }
+        let fieldName = field.name.flatMap(String.init(cString:)) ?? ""
+        defer { field.freeFunc?(field.name) }
+        fields.append(
+          DynamicPropertyDescriptor(
+            type: dynamicPropertyType,
+            offset: offset,
+            name: fieldName
+          )
         )
-      )
+      }
+      cache[ObjectIdentifier(type)] = fields
+      return fields
     }
-    cache[ObjectIdentifier(type)] = fields
-    return fields
   }
 }

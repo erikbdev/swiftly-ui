@@ -25,6 +25,6 @@ public struct Button<Label: View>: View {
 @_spi(Internals)
 extension Button: PrimitiveView {
   public nonisolated static func _makeView(_ node: ViewNode<Self>) {
-    // Label._makeView(node[\.label])
+    node.appendChild(ViewNode(node.view.label))
   }
 }

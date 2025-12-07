@@ -23,6 +23,6 @@ public struct ZStack<Content: View>: View {
 @_spi(Internals)
 extension ZStack: PrimitiveView {
   public nonisolated static func _makeView(_ node: ViewNode<Self>) {
-    // Content._makeView(node[\.content])
+    node.appendChild(ViewNode(node.view.content))  
   }
 }

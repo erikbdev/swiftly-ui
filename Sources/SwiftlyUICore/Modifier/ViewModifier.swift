@@ -25,7 +25,7 @@ extension ViewModifier {
       fatalError("\(Self.self).body cannot have a value of type `Never`")
     } else {
       let child = ViewNode(node.object.body(content: .init()))
-      node.insertChild(child)
+      node.appendChild(child)
       Body.makeView(child)
     }
   }

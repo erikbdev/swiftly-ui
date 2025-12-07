@@ -2,29 +2,38 @@
 @_spi(Internals)
 public class ViewNode<T: View>: Node<T> {
   var properties = DynamicPropertyBuffer()
+  var view: T { 
+    get { self.object }
+    set { self.object = newValue }
+  }
+  
+  var built = false
 
-  override public init(_ object: T) {
+  override init(_ object: T) {
     super.init(object)
-
-    /// Bind properties
-    bindProperties(
-      &self.object,
-      storage: &properties,
-      inputs: DynamicPropertyInputs(environmentValues: self.parent?.environmentValues ?? self.environmentValues)
-    )
-    reevaluate()
+    build()
   }
 
   func property<V, R>(_ keyPath: KeyPath<T, Binding<V>>, operation: (Binding<V>) -> R) -> R {
     operation(object[keyPath: keyPath])
   }
 
-  func reevaluate() {
-    self.children.removeAll(keepingCapacity: true)
+  func build() {
+    guard !built else { return }
+    built = true
+
+    func _recursiveEnvironemntValues(_ node: AnyNode?) -> EnvironmentValues {
+      if let parent = node?.parent {
+        return _recursiveEnvironemntValues(parent).merging(node?.environmentValues ?? EnvironmentValues())
+      } else {
+        return node?.environmentValues ?? EnvironmentValues()
+      }
+    }
+
     bindProperties(
       &self.object,
       storage: &properties,
-      inputs: DynamicPropertyInputs(environmentValues: parent?.environmentValues ?? self.environmentValues)
+      inputs: DynamicPropertyInputs(environmentValues: _recursiveEnvironemntValues(self))
     )
     T.makeView(self)
   }

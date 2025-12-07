@@ -11,14 +11,12 @@ public struct TupleView<each Content: View>: View {
 @_spi(Internals)
 extension TupleView: PrimitiveView {
   public nonisolated static func _makeView(_ node: ViewNode<Self>) {
-    repeat (each node.object.content).addNode(node)
+    repeat (each node.view.content).addNode(node)
   }
 }
 
 extension View {
   fileprivate func addNode<T>(_ parent: ViewNode<T>) {
-    let child = ViewNode(self)
-    parent.insertChild(child)
-    Self.makeView(child)
+    parent.appendChild(ViewNode(self))
   }
 }

@@ -12,15 +12,11 @@ public struct _ConditionalContent<TrueContent: View, FalseContent: View>: View {
 @_spi(Internals)
 extension _ConditionalContent: PrimitiveView {
   public static func _makeView(_ node: ViewNode<Self>) {
-    // switch node.object.content {
-    // case .trueContent(let view):
-    //   let scope = Node(view)
-    //   node.insertChild(scope)
-    //   TrueContent._makeView(scope)
-    // case .falseContent(let view):
-    //   let scope = Node(view)
-    //   node.insertChild(scope)
-    //   FalseContent._makeView(scope)
-    // }
+    switch node.view.content {
+    case .trueContent(let view):
+      node.appendChild(ViewNode(view))
+    case .falseContent(let view):
+      node.appendChild(ViewNode(view))
+    }
   }
 }

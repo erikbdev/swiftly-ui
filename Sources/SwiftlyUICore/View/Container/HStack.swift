@@ -26,6 +26,6 @@ public struct HStack<Content: View>: View {
 @_spi(Internals)
 extension HStack: PrimitiveView {
   public nonisolated static func _makeView(_ node: ViewNode<Self>) {
-    // Content._makeView(node[\.content])
+    node.appendChild(ViewNode(node.view.content)) 
   }
 }

@@ -75,7 +75,7 @@ struct SwiftlyUITests {
     root.property(\.$greetingName) { $property in
       property = "Jane"
     }
-    root.reevaluate()
+    root.build()
     customDump(root, name: "After setting  counter to 6")
   }
 

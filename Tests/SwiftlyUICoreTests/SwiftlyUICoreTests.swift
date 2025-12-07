@@ -63,14 +63,6 @@ private struct Clamped: DynamicProperty {
   }
 }
 
-private struct SwiftlyUIVisitor: ViewVisitor {
-  let viewVisited: (ObjectIdentifier) -> Void
-
-  func visit<V>(_ view: V) where V: View {
-    viewVisited(ObjectIdentifier(V.self))
-  }
-}
-
 @Suite("SwiftlyUITests")
 struct SwiftlyUITests {
   @Test func layoutNodes() async throws {
@@ -92,45 +84,6 @@ struct SwiftlyUITests {
     // #expect(descriptors.count == 2)
 
     dump(descriptors)
-  }
-
-  @Test func testViewVisitor() {
-    var storage: [ObjectIdentifier] = []
-    let visitor = SwiftlyUIVisitor {
-      storage.append($0)
-    }
-
-    let root = ViewNode(CounterView())
-    root.object.visitChildren(visitor)
-
-    customDump(storage, name: "\(CounterView.self) body")
-  }
-
-  @Test func testVisitChildren() {
-    let view = VStack {
-      Text("Hello")
-      Text("Bye")
-      if true {
-        Text("Ok!")
-      } else {
-        EmptyView()
-      }
-      Button {
-      } label: {
-        Group {
-          Text("Hello")
-        }
-      }
-    }
-
-    var count = 0
-    let visitor = SwiftlyUIVisitor { _ in
-      count += 1
-    }
-
-    view.visitChildren(visitor)
-
-    #expect(count == 2)
   }
 }
 

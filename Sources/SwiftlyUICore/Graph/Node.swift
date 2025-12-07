@@ -1,10 +1,10 @@
 import Foundation
 
 @_spi(Internals)
-public class Node<V>: AnyNode {
-  var object: V
+public class Node<T>: AnyNode {
+  var object: T
 
-  public init(_ object: V) {
+  public init(_ object: T) {
     self.object = object
   }
 

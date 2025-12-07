@@ -1,7 +1,7 @@
 import CGTK
 @_spi(Renderer) import SwiftlyUICore
 
-open class GtkBackend: AppBackend {
+open class GtkBackend: Backend {
   // public typealias Component = AnyObject
   var appRef: UnsafeMutablePointer<GtkApplication>?
 

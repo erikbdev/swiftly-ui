@@ -6,7 +6,7 @@
 //
 
 public struct EnvironmentValues {
-  private var storage: [ObjectIdentifier: Any] = [:]
+  private var storage: [ObjectIdentifier: Any?] = [:]
 
   public subscript<T: EnvironmentKey>(_ key: T.Type) -> T.Value {
     get {
@@ -17,9 +17,13 @@ public struct EnvironmentValues {
       }
     }
     set {
-      storage[ObjectIdentifier(T.self)] = newValue
+      storage.updateValue(newValue, forKey: ObjectIdentifier(key))
     }
+  }
+
+  func merging(_ other: EnvironmentValues) -> EnvironmentValues {
+    EnvironmentValues(storage: storage.merging(other.storage, uniquingKeysWith: { $1 }))
   }
 }
 
-extension EnvironmentValues: @unchecked Sendable {}
+// extension EnvironmentValues: @unchecked Sendable {}

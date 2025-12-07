@@ -15,7 +15,7 @@ public struct State<Value>: DynamicProperty {
       guard let _location else {
         logger.critical(
           """
-          Accessing State's value outside of being installed on a View. \
+          Accessing State<\(Value.self)> value outside of being installed on a View. \
           This will result in a constant Binding of the initial value and will not update.
           """
         )
@@ -36,7 +36,7 @@ public struct State<Value>: DynamicProperty {
     guard let _location else {
       logger.critical(
         """
-        Accessing State's value outside of being installed on a View. \
+        Accessing State<\(Value.self)>  value outside of being installed on a View. \
         This will result in a constant Binding of the initial value and will not update.
         """
       )

@@ -49,7 +49,6 @@ public struct Text: View {
 @_spi(Internals)
 extension Text: PrimitiveView {
   public nonisolated static func _makeView(_ node: ViewNode<Self>) {}
-  public nonisolated func _visitChildren<V>(_ visitor: V) where V: ViewVisitor {}
 }
 
 public func + (lhs: Text, rhs: Text) -> Text {

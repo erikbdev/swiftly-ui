@@ -1,4 +1,4 @@
-public struct EmptyModifier {}
+public struct EmptyModifier: Sendable {}
 
 extension EmptyModifier: ViewModifier {
   public func body(content: _ViewModifier_Content<Self>) -> Never {

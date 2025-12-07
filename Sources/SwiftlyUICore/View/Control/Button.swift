@@ -27,7 +27,4 @@ extension Button: PrimitiveView {
   public nonisolated static func _makeView(_ node: ViewNode<Self>) {
     // Label._makeView(node[\.label])
   }
-  public nonisolated func _visitChildren<V: ViewVisitor>(_ visitor: V) {
-    visitor.visit(label)
-  }
 }

@@ -1,4 +1,4 @@
-final class _App<Root: App> {
+final class Application<Root: App> {
   var app: Root
   var backend: Root.Backend
   var environment: EnvironmentValues

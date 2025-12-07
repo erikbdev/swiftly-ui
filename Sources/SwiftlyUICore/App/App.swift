@@ -8,7 +8,7 @@
 //@MainActor
 //@preconcurrency
 public protocol App {
-  associatedtype Backend: AppBackend
+  associatedtype Backend: SwiftlyUICore.Backend
   associatedtype Body: Scene
 
   @SceneBuilder
@@ -23,7 +23,7 @@ public protocol App {
 
 extension App {
   public static func main() {
-    let app = _App(Self())
+    let app = Application(Self())
     app.run()
   }
 }

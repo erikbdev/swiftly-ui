@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol AppBackend {
+public protocol Backend {
   // associatedtype Component
 
   init()

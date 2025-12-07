@@ -5,6 +5,7 @@ extension Optional: View where Wrapped: View {
 @_spi(Internals)
 extension Optional: PrimitiveView where Wrapped: PrimitiveView {
   public nonisolated static func _makeView(_ node: ViewNode<Self>) {
+    // switch node.
     // switch node.object {
     // case .some(let view):
     //   let child = Node(view)
@@ -14,12 +15,5 @@ extension Optional: PrimitiveView where Wrapped: PrimitiveView {
     //   break
     // }
     // // Wrapped._makeView(node[\.wrapped])
-  }
-
-  public nonisolated func _visitChildren<V>(_ visitor: V) where V: ViewVisitor {
-    switch self {
-    case .none: break
-    case .some(let primitive): visitor.visit(primitive)
-    }
   }
 }

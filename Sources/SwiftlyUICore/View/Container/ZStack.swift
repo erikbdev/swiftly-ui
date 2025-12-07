@@ -25,8 +25,4 @@ extension ZStack: PrimitiveView {
   public nonisolated static func _makeView(_ node: ViewNode<Self>) {
     // Content._makeView(node[\.content])
   }
-
-  public nonisolated func _visitChildren<V: ViewVisitor>(_ visitor: V) {
-    visitor.visit(content)
-  }
 }

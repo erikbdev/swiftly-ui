@@ -33,8 +33,4 @@ extension AnyView: PrimitiveView {
     // }
     // _makeView(node.object.content)
   }
-
-  public nonisolated func _visitChildren<V>(_ visitor: V) where V: ViewVisitor {
-    visitor.visit(content)
-  }
 }

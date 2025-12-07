@@ -1,4 +1,4 @@
-// swift-tools-version: 6.1
+// swift-tools-version: 6.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -10,6 +10,7 @@ let package = Package(
     .library(name: "SwiftlyUI", targets: ["SwiftlyUI"]),
     .library(name: "SwiftlyUICore", targets: ["SwiftlyUICore"]),
     .library(name: "GtkUI", targets: ["GtkUI"]),
+    .library(name: "TerminalUI", targets: ["TerminalUI"])
   ],
   dependencies: [
     .package(url: "https://github.com/apple/swift-log", exact: "1.6.4"),
@@ -20,6 +21,12 @@ let package = Package(
       name: "SwiftlyUI",
       dependencies: [
         .target(name: "GtkUI", condition: .when(platforms: [.linux, .windows]))
+      ]
+    ),
+    .target(
+      name: "TerminalUI",
+      dependencies: [
+        "SwiftlyUICore"
       ]
     ),
     .target(

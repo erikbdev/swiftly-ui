@@ -5,18 +5,13 @@
 //  Created by erikbdev on 8/14/25.
 //
 
-//@MainActor
-//@preconcurrency
 public protocol View {
   associatedtype Body: View
 
   @ViewBuilder
-  //    @MainActor
-  //    @preconcurrency
   var body: Self.Body { get }
 }
 
-// @_spi(Internals)
 extension View {
   nonisolated static func makeView(_ node: ViewNode<Self>) {
     if let prim = self as? any PrimitiveView.Type {
@@ -41,9 +36,5 @@ extension Never: View {
 @_spi(Internals)
 public protocol PrimitiveView: View where Body == Never {
   nonisolated static func _makeView(_ node: ViewNode<Self>)
-  nonisolated func _visitChildren<V: ViewVisitor>(_ visitor: V)
-}
-
-extension PrimitiveView {
-  public nonisolated func _visitChildren<V: ViewVisitor>(_ visitor: V) {}
+  // nonisolated static func _updateView(_ oldView: Self, _ newView: Node)
 }

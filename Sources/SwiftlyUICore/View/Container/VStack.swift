@@ -25,8 +25,4 @@ public struct VStack<Content: View>: View {
 @_spi(Internals)
 extension VStack: PrimitiveView {
   public nonisolated static func _makeView(_ node: ViewNode<Self>) {}
-
-  public nonisolated func _visitChildren<V: ViewVisitor>(_ visitor: V) {
-    visitor.visit(content)
-  }
 }

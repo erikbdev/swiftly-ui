@@ -14,24 +14,20 @@ public protocol ViewModifier {
 }
 
 @_spi(Internals)
-extension ViewModifier {
-  public nonisolated static func _makeViewModifier(_ node: Node<Self>) {
-    if let prim = self as? any PrimitiveViewModifier.Type {
-      func make<T: PrimitiveViewModifier>(_: T.Type) {
-        T._makePrimitiveViewModifier(unsafeDowncast(node, to: Node<T>.self))
-      }
-      make(prim.self)
-    } else if Body.self is Never.Type {
-      fatalError("\(Self.self).body cannot have a value of type `Never`")
-    } else {
-      let child = ViewNode(node.object.body(content: .init()))
-      node.appendChild(child)
-      Body.makeView(child)
-    }
+public protocol PrimitiveViewModifier: ViewModifier where Body == Never {
+  static func _makeViewModifier<T: View>(_ modifier: Self, for node: Node<T>)
+}
+
+@_spi(Internals)
+extension PrimitiveViewModifier {
+  public func body(content: _ViewModifier_Content<Self>) -> Never {
+    fatalError()
   }
 }
 
 public struct _ViewModifier_Content<Modifier: ViewModifier>: View {
+  // TODO: pass this in a static func instead?
+  let baseNode: AnyNode
   public typealias Body = Never
 
   public var body: Never { fatalError() }
@@ -39,16 +35,15 @@ public struct _ViewModifier_Content<Modifier: ViewModifier>: View {
 
 @_spi(Internals)
 extension _ViewModifier_Content: PrimitiveView {
-  public static func _makeView(_ node: ViewNode<Self>) {}
+  public static func _makeView(_ node: Node<Self>) {
+    node.view.baseNode.parent = node.parent
+    node.view.baseNode.children.append(contentsOf: node.children)
+    node.view.baseNode.environmentValues = node.view.baseNode.environmentValues.merging(node.environmentValues)
+   }
 }
 
 extension Never: ViewModifier {
   public func body(content: _ViewModifier_Content<Never>) -> Never { fatalError() }
-}
-
-@_spi(Internals)
-public protocol PrimitiveViewModifier: ViewModifier where Body == Never {
-  static func _makePrimitiveViewModifier(_ node: Node<Self>)
 }
 
 extension View {
@@ -57,13 +52,22 @@ extension View {
   }
 }
 
-extension ModifiedContent: View where Content: View, Modifier: ViewModifier, Modifier.Body == Never {
+extension ModifiedContent: View where Content: View, Modifier: ViewModifier {
   public var body: Never { fatalError() }
-
-  // TODO: Add this modifier's properties as part of the view that is attached to.
 }
 
-// @_spi(Internals)
-// extension ModifiedContent: PrimitiveViewModifier where Modifier: ViewModifier {
-//     public static func _makePrimitiveViewModifier(_ node: Node<Self>) {}
-// }
+@_spi(Internals)
+extension ModifiedContent: PrimitiveView where Content: View, Modifier: ViewModifier {
+  public static func _makeView(_ node: Node<Self>) {
+    bindProperties(&node.view.modifier, storage: &node.properties, inputs: DynamicPropertyInputs(environmentValues: node.resolvedEnvironmentValues))
+    if let primitiveType = Modifier.self as? any PrimitiveViewModifier.Type {
+      func _makeViewModifier<U: PrimitiveViewModifier>(_ type: U.Type) {
+        node.appendChild(Node(node.view.content))
+        U._makeViewModifier(node.view.modifier as! U, for: node)
+      }
+      _makeViewModifier(primitiveType)
+    } else {
+      Modifier.Body.makeView(Node(node.view.modifier.body(content: .init(baseNode: Node(node.view.content)))))
+    }
+ }
+}

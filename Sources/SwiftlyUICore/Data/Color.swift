@@ -4,7 +4,7 @@ public struct Color: Hashable, Sendable, View, ShapeStyle {
 
 @_spi(Internals)
 extension Color: PrimitiveView {
-  public static func _makeView(_ node: ViewNode<Self>) {}
+  public static func _makeView(_ node: Node<Self>) {}
 }
 
 extension ShapeStyle where Self == Color {

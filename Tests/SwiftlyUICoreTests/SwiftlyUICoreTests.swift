@@ -57,7 +57,7 @@ private struct Clamped: DynamicProperty {
         return currentValue
       }
     }
-    nonmutating set {
+    set {
       self._value = max(range.lowerBound, min(range.upperBound, newValue))
     }
   }
@@ -66,7 +66,7 @@ private struct Clamped: DynamicProperty {
 @Suite("SwiftlyUITests")
 struct SwiftlyUITests {
   @Test func layoutNodes() async throws {
-    let root = ViewNode(CounterView())
+    let root = Node(CounterView())
 
     root.property(\.$count) { $property in
       property = 6
@@ -75,8 +75,14 @@ struct SwiftlyUITests {
     root.property(\.$greetingName) { $property in
       property = "Jane"
     }
+
     root.build()
-    customDump(root, name: "After setting  counter to 6")
+
+    print(root.tree())
+
+    root.property(\.$count) { $prop in
+      prop += 1
+    }
   }
 
   @Test func dynamicPropertiesCounter() {
@@ -84,6 +90,18 @@ struct SwiftlyUITests {
     // #expect(descriptors.count == 2)
 
     dump(descriptors)
+  }
+
+  @Test func primitiveModifierTest() async throws {
+    let view = Text("Hello")
+      .environment(\.defaultText, "hi")
+    
+    let node = Node(view)
+    node.build()
+
+    #expect(node.environmentValues[keyPath: \.defaultText] == "hi")
+    
+    customDump(node)
   }
 }
 

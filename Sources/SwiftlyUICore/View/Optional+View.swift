@@ -4,10 +4,10 @@ extension Optional: View where Wrapped: View {
 
 @_spi(Internals)
 extension Optional: PrimitiveView where Wrapped: PrimitiveView {
-  public nonisolated static func _makeView(_ node: ViewNode<Self>) {
+  public nonisolated static func _makeView(_ node: Node<Self>) {
     switch node.view {
     case .some(let view):
-      node.appendChild(ViewNode(view))
+      node.appendChild(Node(view))
     case .none:
       break
     }

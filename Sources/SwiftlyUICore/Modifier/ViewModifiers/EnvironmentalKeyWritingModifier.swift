@@ -6,16 +6,12 @@ public struct EnvironmentalKeyWritingModifier<Value>: ViewModifier {
     self.keyPath = keyPath
     self.value = value
   }
-
-  public func body(content: Content) -> Never {
-    fatalError()
-  }
 }
 
 @_spi(Internals)
 extension EnvironmentalKeyWritingModifier: PrimitiveViewModifier {
-  public static func _makePrimitiveViewModifier(_ node: Node<Self>) {
-    node.parent?.environmentValues[keyPath: node.object.keyPath] = node.object.value
+  public static func _makeViewModifier<T: View>(_ modifier: Self, for node: Node<T>) {
+    node.environmentValues[keyPath: modifier.keyPath] = modifier.value
   }
 }
 

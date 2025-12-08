@@ -23,8 +23,8 @@ public struct Toggle<Label: View>: View {
 
 @_spi(Internals)
 extension Toggle: PrimitiveView {
-  public nonisolated static func _makeView(_ node: ViewNode<Self>) {
-    node.appendChild(ViewNode(node.view.label))
+  public nonisolated static func _makeView(_ node: Node<Self>) {
+    node.appendChild(Node(node.view.label))
   }
 }
 

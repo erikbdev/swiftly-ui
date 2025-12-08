@@ -15,18 +15,18 @@ public protocol SceneModifier {
 
 @_spi(Internals)
 extension ViewModifier {
-  public nonisolated static func _makeSceneModifier(_ node: Node<Self>) {
+   nonisolated static func makeSceneModifier(_ node: Node<Self>) {
     if let prim = self as? any PrimitiveSceneModifier.Type {
       func make<T: PrimitiveSceneModifier>(_: T.Type) {
-        T._makePrimitiveSceneModifier(unsafeDowncast(node, to: Node<T>.self))
+        T._makeSceneModifier(node as! Node<T>)
       }
       make(prim.self)
     } else if Body.self is Never.Type {
       fatalError("\(Self.self).body cannot have a value of type `Never`")
     } else {
-      let child = ViewNode(node.object.body(content: .init()))
-      node.appendChild(child)
-      Body.makeView(child)
+      // let child = Node(node.object.body(content: .init()))
+      // node.appendChild(child)
+      // Body.makeView(child)
     }
   }
 }
@@ -39,7 +39,7 @@ public struct _SceneModifier_Content<Modifier: SceneModifier>: Scene {
 
 @_spi(Internals)
 extension _SceneModifier_Content: PrimitiveScene {
-  public static func _makePrimitiveScene(_ node: SceneNode<Self>) {}
+  public static func _makePrimitiveScene(_ node: Node<Self>) {}
 }
 
 extension Never: SceneModifier {
@@ -48,7 +48,7 @@ extension Never: SceneModifier {
 
 @_spi(Internals)
 public protocol PrimitiveSceneModifier: SceneModifier where Body == Never {
-  static func _makePrimitiveSceneModifier(_ node: Node<Self>)
+  static func _makeSceneModifier(_ node: Node<Self>)
 }
 
 extension Scene {

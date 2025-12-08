@@ -15,8 +15,8 @@ public protocol Backend {
   func runMainLoop(_ callback: @escaping @MainActor () -> Void)
 
   // @_spi(Internals)
-  // func createText(_ node: ViewNode<Text>) -> Component
+  // func createText(_ node: Node<Text>) -> Component
 
   // @_spi(Internals)
-  // func createButton<V: View>(_ node: ViewNode<Button<V>>) -> Component
+  // func createButton<V: View>(_ node: Node<Button<V>>) -> Component
 }

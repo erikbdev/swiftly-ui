@@ -17,17 +17,13 @@ public struct GeometryReader<Content: View>: View {
 
 /// TODO: get view size?
 public struct GeometryProxy {
-  public var size: SIMD2<Int> {
-    fatalError()
-  }
+  public var size: SIMD2<Int> { .zero }
 
   public subscript<T>(anchor: Anchor<T>) -> T {
     fatalError()
   }
 
-  public var safeAreaInsets: EdgeInsets {
-    fatalError()
-  }
+  public var safeAreaInsets: EdgeInsets { .init() }
 }
 
 public struct Anchor<Value> {}
@@ -48,7 +44,7 @@ public struct EdgeInsets: Hashable {
 
 @_spi(Internals)
 extension GeometryReader: PrimitiveView {
-  public nonisolated static func _makeView(_ node: ViewNode<Self>) {
-    node.appendChild(ViewNode(node.view.content(GeometryProxy())))
+  public nonisolated static func _makeView(_ node: Node<Self>) {
+    node.appendChild(Node(node.view.content(GeometryProxy())))
   }
 }

@@ -99,7 +99,7 @@ struct SwiftlyUITests {
     let node = Node(view)
     node.build()
 
-    #expect(node.environmentValues[keyPath: \.defaultText] == "hi")
+    #expect(node.environmentValues.defaultText == "hi")
     
     customDump(node)
   }

@@ -92,15 +92,27 @@ struct SwiftlyUITests {
     dump(descriptors)
   }
 
-  @Test func primitiveModifierTest() async throws {
+  @Test func environmetWriterModifier() async throws {
     let view = Text("Hello")
       .environment(\.defaultText, "hi")
-    
+
     let node = Node(view)
     node.build()
 
     #expect(node.environmentValues.defaultText == "hi")
-    
+
+    customDump(node)
+  }
+
+  @Test func customViewModifier() async throws {
+    let view = Text("Hello")
+      .modifier(CustomViewModifier())
+
+    let node = Node(view)
+    node.build()
+
+    // #expect(node.environmentValues.defaultText == "hi")
+
     customDump(node)
   }
 }
@@ -113,5 +125,14 @@ extension EnvironmentValues {
   var defaultText: String {
     get { self[DefaultValue.self] }
     set { self[DefaultValue.self] = newValue }
+  }
+}
+
+private struct CustomViewModifier: ViewModifier {
+  @State private var test = ""
+
+  func body(content: Content) -> some View {
+    content
+      .environment(\.defaultText, "hello there")
   }
 }

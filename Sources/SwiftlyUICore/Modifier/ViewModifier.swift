@@ -67,7 +67,11 @@ extension ModifiedContent: PrimitiveView where Content: View, Modifier: ViewModi
       }
       _makeViewModifier(primitiveType)
     } else {
-      Modifier.Body.makeView(Node(node.view.modifier.body(content: .init(baseNode: Node(node.view.content)))))
+      let baseNode = Node(node.view.content)
+      let resolvedBody = node.view.modifier.body(content: .init(baseNode: baseNode))
+      let placeholderNode = Node(resolvedBody)
+      Modifier.Body.makeView(placeholderNode) 
+      node.appendChild(baseNode)
     }
  }
 }

@@ -27,6 +27,13 @@ extension PrimitiveViewModifier {
 
 public struct _ViewModifier_Content<Modifier: ViewModifier>: View {
   let baseNode: AnyNode
+  let viewType: any View.Type
+
+  fileprivate init<V: View>(_ node: Node<V>) {
+    self.baseNode = node
+    self.viewType = V.self
+  }
+
   public typealias Body = Never
 
   public var body: Never { fatalError() }
@@ -35,8 +42,10 @@ public struct _ViewModifier_Content<Modifier: ViewModifier>: View {
 @_spi(Internals)
 extension _ViewModifier_Content: PrimitiveView {
   public static func _makeView(_ node: Node<Self>) {
-    node.parent?.children.append(node.view.baseNode)
-    // node.view.baseNode?.build()
+    func _castView<V: View>(_ type: V.Type) {
+      node.appendChild(node.view.baseNode as! Node<V>)
+    }
+    _castView(node.view.viewType)
   }
 }
 
@@ -64,10 +73,10 @@ extension ModifiedContent: PrimitiveView where Content: View, Modifier: ViewModi
         U._makeViewModifier(node.view.modifier as! U, for: node)
       }
       _makeViewModifier(primitiveType)
+    } else if Modifier.Body.self is Never.Type {
+      fatalError("\(Modifier.self).Body cannot be of type `Never`")
     } else {
-      let contentNode = Node(node.view.content)
-      // let modifierBody = Node(node.view.modifier.body(content: .init()))
-      // Modifier.Body.makeView(modifierBody)
+      node.appendChild(Node(node.view.modifier.body(content: .init(Node(node.view.content)))))
     }
   }
 }

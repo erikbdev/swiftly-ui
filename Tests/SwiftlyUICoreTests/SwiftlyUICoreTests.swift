@@ -105,13 +105,13 @@ struct SwiftlyUITests {
   }
 
   @Test func customViewModifier() async throws {
-    let view = Text("Hello")
-      .modifier(CustomViewModifier())
+    let view = ModifiedContent(
+      content: Text("hello"),
+      modifier: CustomViewModifier()
+    )
 
     let node = Node(view)
     node.build()
-
-    // #expect(node.environmentValues.defaultText == "hi")
 
     customDump(node)
   }

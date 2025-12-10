@@ -26,7 +26,6 @@ extension PrimitiveViewModifier {
 }
 
 public struct _ViewModifier_Content<Modifier: ViewModifier>: View {
-  // TODO: pass this in a static func instead?
   let baseNode: AnyNode
   public typealias Body = Never
 
@@ -36,10 +35,9 @@ public struct _ViewModifier_Content<Modifier: ViewModifier>: View {
 @_spi(Internals)
 extension _ViewModifier_Content: PrimitiveView {
   public static func _makeView(_ node: Node<Self>) {
-    node.view.baseNode.parent = node.parent
-    node.view.baseNode.children.append(contentsOf: node.children)
-    node.view.baseNode.environmentValues = node.view.baseNode.environmentValues.merging(node.environmentValues)
-   }
+    node.parent?.children.append(node.view.baseNode)
+    // node.view.baseNode?.build()
+  }
 }
 
 extension Never: ViewModifier {
@@ -67,11 +65,9 @@ extension ModifiedContent: PrimitiveView where Content: View, Modifier: ViewModi
       }
       _makeViewModifier(primitiveType)
     } else {
-      let baseNode = Node(node.view.content)
-      let resolvedBody = node.view.modifier.body(content: .init(baseNode: baseNode))
-      let placeholderNode = Node(resolvedBody)
-      Modifier.Body.makeView(placeholderNode) 
-      node.appendChild(baseNode)
+      let contentNode = Node(node.view.content)
+      // let modifierBody = Node(node.view.modifier.body(content: .init()))
+      // Modifier.Body.makeView(modifierBody)
     }
- }
+  }
 }
